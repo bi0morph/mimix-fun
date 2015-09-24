@@ -22,14 +22,13 @@
 			strokeShadow: true
 		};
 
-
+	function drawButtons(button) {
+		canvas.add(button);
+	}
 	function _drawPanelTo(canvas) {
-
 		canvas.add(_panel);
 		_panel.setShadow(_shadow);
-		_panel.buttons.forEach(function drawButtons(button) {
-			canvas.add(button);
-		});
+		_panel.drawButtonsTo(canvas);
 	}
 	function _removePanel() {
 		mimic.canvas.remove(_panel);

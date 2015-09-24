@@ -4,12 +4,37 @@
  */
 (function() {
 	'use strict';
+	function draggable(object) {
+		object.on('mousedown', function() {
+			var temp = this.clone();
+			temp.set({
+				hasControls: false,
+				hasBorders: false,
+			});
+			mimic.canvas.add(temp);
+			draggable(temp);
+		});
+		object.on('mouseup', function() {
+			this.off('mousedown');
+
+			// Comment this will let the clone object able to be removed by drag it to menu bar
+			// this.off('mouseup');
+
+			// Remove the object if its position is in menu bar
+			if(this.left <= 200) {
+				mimic.canvas.remove(this);
+			}
+		});
+	}
 
 	fabric.SimpleButton = fabric.util.createClass( fabric.Object,  {
 			type: 'simple-button',
 			objectPrototype: null,
 			initialize: function(object) {
 				this.objectPrototype = object;
+
+				draggable(this.objectPrototype);
+
 				this.callSuper('initialize', {
 					selectable: false
 				});
@@ -20,24 +45,12 @@
 			toObject: function() {
 				return false;
 			},
-			render: function() {
-				var buttonLength = this.buttons.length,
-					buttonSide = this.buttonSize - this.buttonPadding * 2,
-					panelRowNumber = Math.abs( Math.floor( (buttonLength-1) / 2) ),
-					top = parseInt(this.top, 10) + panelRowNumber * this.buttonSize + this.buttonPadding,
-					left;
+			setPosition: function(buttonSide, top, left) {
+				this.objectPrototype.set('width', buttonSide);
+				this.objectPrototype.set('height', buttonSide);
+				this.objectPrototype.set('top', top);
+				this.objectPrototype.set('left', left);
 
-				if (buttonLength % 2) {
-					left = parseInt(this.left, 10) + this.buttonPadding;
-				} else {
-					left = parseInt(this.left, 10) + this.buttonPadding*3 + buttonSide;
-				}
-
-				button.set('width', buttonSide);
-				button.set('height', buttonSide);
-				button.set('top', top);
-				button.set('left', left);
 			}
 		});
-
-});
+})();

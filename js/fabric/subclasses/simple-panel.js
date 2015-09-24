@@ -23,7 +23,6 @@
 		addButton: function(button) {
 
 			this.buttons.push(button);
-			button.set('selectable', false);
 			var buttonLength = this.buttons.length,
 				buttonSide = this.buttonSize - this.buttonPadding * 2,
 				panelRowNumber = Math.abs( Math.floor( (buttonLength-1) / 2) ),
@@ -35,11 +34,12 @@
 			} else {
 				left = parseInt(this.left, 10) + this.buttonPadding*3 + buttonSide;
 			}
-
-			button.set('width', buttonSide);
-			button.set('height', buttonSide);
-			button.set('top', top);
-			button.set('left', left);
+			button.setPosition(buttonSide, top, left);
+		},
+		drawButtonsTo: function(canvas) {
+			this.buttons.forEach(function(button) {
+				canvas.add( button.objectPrototype );
+			});
 		}
 	});
 })();
