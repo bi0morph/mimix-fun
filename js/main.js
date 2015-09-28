@@ -17,12 +17,15 @@
 	});
 	mimic.leftPanel.addButton( new fabric.SimpleButton(triangle));
 
-	mimic.leftPanel.addButton( new fabric.SimpleButton(triangle));
 
-	var imgElement = document.getElementById('my-image');
-	var imgInstance = new fabric.Image(imgElement);
-	mimic.leftPanel.addButton( new fabric.SimpleButton(imgInstance));
+	var image1 = new fabric.SimpleImage('images/img1.jpg');
+	image1.on('image:loaded', mimic.canvas.renderAll.bind(mimic.canvas));
+	mimic.leftPanel.addButton( new fabric.SimpleButton(image1));
+
+	var image2 = new fabric.SimpleImage('images/img2.jpg');
+	image2.on('image:loaded', mimic.canvas.renderAll.bind(mimic.canvas));
+
+	mimic.leftPanel.addButton( new fabric.SimpleButton(image2));
 
 	mimic.leftPanel.drawTo(mimic.canvas);
-
 })();

@@ -9,9 +9,11 @@
 			var temp = this.clone();
 			temp.set({
 				hasControls: false,
-				hasBorders: false,
+				hasBorders: false
 			});
+
 			mimic.canvas.add(temp);
+
 			draggable(temp);
 		});
 		object.on('mouseup', function() {
@@ -32,6 +34,10 @@
 			objectPrototype: null,
 			initialize: function(object) {
 				this.objectPrototype = object;
+				object.set({
+					hasControls: false,
+					hasBorders: false
+				});
 
 				draggable(this.objectPrototype);
 
