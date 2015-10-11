@@ -6,7 +6,7 @@
 
 	var CursorState = fabric.util.createClass( {
 		initialize: function () {},
-		state: null
+		state: 'move'
 	});
 	fabric.util.object.extend(CursorState.prototype, fabric.Observable);
 

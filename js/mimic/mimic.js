@@ -24,7 +24,15 @@
   global.addEventListener('resize', resizeCanvas, false);
 
   resizeCanvas();
+
+  var _setAllObjectSelectable = function(key) {
+    canvas.getObjects().forEach(function(o) {
+      o.set('selectable', key && !o.isPanel && !o.isButton);
+    });
+  };
+
   global.mimic = {
-    canvas : canvas
+    canvas : canvas,
+    setAllObjectSelectable: _setAllObjectSelectable
   }
 })(window, fabric);

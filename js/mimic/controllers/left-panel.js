@@ -21,7 +21,7 @@
 			fillShadow: true,
 			strokeShadow: true
 		};
-
+	_panel.isPanel = true;
 	function drawButtons(button) {
 		canvas.add(button);
 	}
@@ -37,6 +37,7 @@
 		});
 	}
 	function _addButton(button) {
+		button.isButton = true;
 		_panel.addButton(button);
 	}
 

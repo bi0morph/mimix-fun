@@ -6,6 +6,7 @@
 	'use strict';
 	function draggable(object) {
 		object.on('mousedown', function() {
+
 			var temp = this.clone();
 			temp.set({
 				hasControls: false,
@@ -25,6 +26,10 @@
 			// Remove the object if its position is in menu bar
 			if(this.left <= 200) {
 				mimic.canvas.remove(this);
+			}
+
+			if(mimic.cursor.state !== 'move') {
+				this.set('selectable', false);
 			}
 		});
 	}

@@ -22,12 +22,22 @@
 	image1.on('image:loaded', mimic.canvas.renderAll.bind(mimic.canvas));
 	mimic.leftPanel.addButton( new fabric.SimpleButton(image1));
 
-	var image2 = new fabric.SimpleImage('images/img2.jpg');
-	image2.on('image:loaded', mimic.canvas.renderAll.bind(mimic.canvas));
-
-	mimic.leftPanel.addButton( new fabric.SimpleButton(image2));
+	var group2 = new fabric.GroupWithConnections();
+	mimic.leftPanel.addButton( new fabric.SimpleButton(group2));
 
 	mimic.leftPanel.drawTo(mimic.canvas);
 
 	mimic.rightPanel.init(mimic.canvas);
+
+
+	mimic.cursor.on('cursor:change', function(type) {
+		switch (type) {
+			case 'connect':
+				mimic.setAllObjectSelectable(false);
+				break;
+			case 'move':
+				mimic.setAllObjectSelectable(true);
+				break;
+		}
+	});
 })();
