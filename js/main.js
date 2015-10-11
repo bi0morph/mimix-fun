@@ -28,4 +28,6 @@
 	mimic.leftPanel.addButton( new fabric.SimpleButton(image2));
 
 	mimic.leftPanel.drawTo(mimic.canvas);
+
+	mimic.rightPanel.init(mimic.canvas);
 })();
