@@ -45,29 +45,48 @@
 			options.width = options.width || _default.rectangle.width;
 			options.height = options.height || _default.rectangle.height;
 
+			var mouseOver = function() {
+					this.setFill('grey');
+				},
+				mouseOut = function() {
+					this.setFill('transparent');
+				};
 			var circleLeft = _default.circle.clone().set({
 					top: options.height / 2 - _default.circle.radius,
-					left: 0
+					left: 0,
+					selectable: false
 				}),
 				circleRight = _default.circle.clone().set({
 					top: options.height / 2 - _default.circle.radius,
-					left: _default.line.width * 2 + _default.circle.radius * 2 + options.width
+					left: _default.line.width * 2 + _default.circle.radius * 2 + options.width,
+					selectable: false
 				}),
 				lineLeft = _default.line.clone().set({
 					x1: _default.circle.radius * 2,
 					x2: _default.circle.radius * 2 + _default.line.width,
 					y1: options.height / 2,
-					y2: options.height / 2
+					y2: options.height / 2,
+					selectable: false
 				}),
 				lineRight = _default.line.clone().set({
 					x1: _default.circle.radius * 2 + _default.line.width + options.width,
 					x2: _default.circle.radius * 2 + _default.line.width * 2 + options.width,
 					y1: options.height / 2,
-					y2: options.height / 2
+					y2: options.height / 2,
+					selectable: false
 				}),
 				rectangle = _default.rectangle.clone().set({
-					left: _default.circle.radius * 2 + _default.line.width
+					left: _default.circle.radius * 2 + _default.line.width,
+					selectable: false
 				});
+
+			circleLeft.mouseOver = mouseOver;
+			circleLeft.mouseOut = mouseOut;
+			circleRight.mouseOver = mouseOver;
+			circleRight.mouseOut = mouseOut;
+			circleLeft.line = null;
+			circleRight.line = null;
+
 			this.connections.push(circleLeft, circleRight);
 			objects = [circleLeft, circleRight, lineLeft, lineRight, rectangle];
 			this.callSuper('initialize', objects, options);

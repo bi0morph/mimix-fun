@@ -30,9 +30,34 @@
       o.set('selectable', key && !o.isPanel && !o.isButton);
     });
   };
+  var _showAllConnections = function(key) {
+
+
+
+    canvas.getObjects().forEach(function(o) {
+      if (o.type === 'group-with-connections' && !o.isButton) {
+
+        if (key) {
+          var items = o._objects;
+          o._restoreObjectsState();
+          o.set('visible', false);
+          for(var i = 0; i < items.length; i++) {
+            canvas.add(items[i]);
+          }
+        } else {
+          var items = o._objects;
+          o.set('visible', true);
+          for(var i = 0; i < items.length; i++) {
+            canvas.remove(items[i]);
+          }
+        }
+      }
+    });
+  };
 
   global.mimic = {
     canvas : canvas,
-    setAllObjectSelectable: _setAllObjectSelectable
+    setAllObjectSelectable: _setAllObjectSelectable,
+    showAllConnections: _showAllConnections
   }
 })(window, fabric);

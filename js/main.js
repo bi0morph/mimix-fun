@@ -34,9 +34,11 @@
 		switch (type) {
 			case 'connect':
 				mimic.setAllObjectSelectable(false);
+				mimic.showAllConnections(true);
 				break;
 			case 'move':
 				mimic.setAllObjectSelectable(true);
+				mimic.showAllConnections(false);
 				break;
 		}
 	});
