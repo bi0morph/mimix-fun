@@ -1,63 +1,35 @@
 /**
  * Created by rus on 23.09.2015.
  */
-(function(global, fabric) {
+(function(global) {
   'use strict';
 
-  if (!fabric || !fabric.Canvas) {
-    console.error('fabric is not included');
-    return;
+  var mimic  = global.mimic || (global.mimic = {
+				canvas: null,
+				init: _init,
+				resizeCanvas: _resizeCanvas
+			}),
+		fabric  = global.fabric;
+
+  function _resizeCanvas() {
+		if (this.canvas) {
+			this.canvas.setHeight(window.innerHeight);
+			this.canvas.setWidth(window.innerWidth);
+			this.canvas.renderAll();
+		}
   }
 
-  var _CANVAS_BACKGROUND = 'rgb(220,255,220)';
+	function _init() {
+		var _CANVAS_BACKGROUND = 'rgb(255,255,255)';
 
-  var canvas = new fabric.Canvas('mimic-canvas', {
-    backgroundColor: _CANVAS_BACKGROUND
-  });
-  canvas.selection = false;
+		var canvas = this.canvas = new fabric.Canvas('mimic-canvas', {
+			backgroundColor: _CANVAS_BACKGROUND,
+			selection: false
+		});
 
-  function resizeCanvas() {
-    canvas.setHeight(window.innerHeight);
-    canvas.setWidth(window.innerWidth);
-    canvas.renderAll();
-  }
-  global.addEventListener('resize', resizeCanvas, false);
-
-  resizeCanvas();
-
-  var _setAllObjectSelectable = function(key) {
-    canvas.getObjects().forEach(function(o) {
-      o.set('selectable', key && !o.isPanel && !o.isButton);
-    });
-  };
-  var _showAllConnections = function(key) {
+		global.addEventListener('resize', this.resizeCanvas.bind(this), false);
+		this.resizeCanvas();
+	}
 
 
-
-    canvas.getObjects().forEach(function(o) {
-      if (o.type === 'group-with-connections' && !o.isButton) {
-
-        if (key) {
-          var items = o._objects;
-          o._restoreObjectsState();
-          o.set('visible', false);
-          for(var i = 0; i < items.length; i++) {
-            canvas.add(items[i]);
-          }
-        } else {
-          var items = o._objects;
-          o.set('visible', true);
-          for(var i = 0; i < items.length; i++) {
-            canvas.remove(items[i]);
-          }
-        }
-      }
-    });
-  };
-
-  global.mimic = {
-    canvas : canvas,
-    setAllObjectSelectable: _setAllObjectSelectable,
-    showAllConnections: _showAllConnections
-  }
-})(window, fabric);
+})(typeof exports !== 'undefined' ? exports : this);
