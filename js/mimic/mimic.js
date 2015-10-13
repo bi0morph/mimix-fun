@@ -22,13 +22,34 @@
 	function _init() {
 		var _CANVAS_BACKGROUND = 'rgb(255,255,255)';
 
-		var canvas = this.canvas = new fabric.Canvas('mimic-canvas', {
+		var canvas = this.canvas = new mimic.Canvas('mimic-canvas', {
 			backgroundColor: _CANVAS_BACKGROUND,
 			selection: false
 		});
 
 		global.addEventListener('resize', this.resizeCanvas.bind(this), false);
 		this.resizeCanvas();
+
+		var left = new mimic.SimpleGroupConnections({
+			top: 100,
+			left: 100,
+			hasControls: false,
+			hasBorders: false
+		});
+		var right = new mimic.SimpleGroupConnections({
+			top: 200,
+			left: 500,
+			hasControls: false,
+			hasBorders: false
+		});
+		canvas.add(left, right);
+		canvas.renderAll();
+
+
+		//canvas.setActiveObject(group);
+		//getActiveObject
+		//discardActiveObject
+
 	}
 
 
