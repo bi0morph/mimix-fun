@@ -14,18 +14,25 @@
 
 			fabric.Canvas.activeInstance = this;
 
-			this.on('connection_line:created', function() {
+			function __chancelDrawingMode() {
 				this._currentTransform = false;
 				this.isDrawingMode = false;
-			});
+				this._isCurrentlyDrawing = true;
+			}
+			this.on('connection_line:created', __chancelDrawingMode);
+			this.on('connection_line:chanceled', __chancelDrawingMode);
 		},
 		setDrawingMode: function(brush, e) {
+			this.deactivateAll().renderAll();
 			if (brush) {
 				this.isDrawingMode = true;
 				this.freeDrawingBrush = brush;
 				this._isCurrentlyDrawing = true;
-				this.deactivateAll().renderAll();
 				this.freeDrawingBrush.onMouseDown(e);
+			} else {
+				this.isDrawingMode = false;
+				this._isCurrentlyDrawing = false;
+				this._currentTransform = false;
 			}
 		}
 	});

@@ -39,8 +39,14 @@
 		/**
 		 * Invoked on mouse up
 		 */
-		onMouseUp: function() {
-			this._finalizeAndAddPath();
+		onMouseUp: function(target) {
+			if (target && target.type === 'connector') {
+				this._finalizeAndAddPath();
+			} else {
+				this._reset();
+				this.canvas.clearContext(this.canvas.contextTop);
+				this.canvas.trigger('connection_line:chanceled');
+			}
 		},
 
 		/**

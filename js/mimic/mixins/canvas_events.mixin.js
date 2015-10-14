@@ -8,6 +8,11 @@
 		addListener = fabric.util.addListener,
 		removeListener = fabric.util.removeListener;
 
+	var __containtsPoint = function(obj, point) {
+		return obj.originalLeft < point.x && point.x < (obj.originalLeft + obj.width) &&
+			obj.originalTop < point.y && point.y < (obj.originalTop + obj.height);
+	};
+
 	fabric.util.object.extend(mimic.Canvas.prototype, {
 
 		/**
@@ -163,14 +168,26 @@
 		 * @param {Event} e Event object fired on mouseup
 		 * @param {Object} e Object that was finded on this points
 		 */
-		_onMouseUpInDrawingMode: function(e, target) {
+		_onMouseUpInDrawingMode: function(e) {
+
 			this._isCurrentlyDrawing = false;
 			if (this.clipTo) {
 				this.contextTop.restore();
 			}
 			var target = this.findTarget(e);
-
-			this.freeDrawingBrush.onMouseUp();
+			if (target && target.fireToObjects) {
+				var point = {
+					x: e.x - target.left,
+					y: e.y - target.top
+				};
+				target.getObjects().some(function(obj) {
+					if (__containtsPoint(obj, point)) {
+						target = obj;
+						return true;
+					}
+				});
+			}
+			this.freeDrawingBrush.onMouseUp(target);
 			this.fire('mouse:up', { e: e });
 
 
