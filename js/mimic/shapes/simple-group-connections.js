@@ -92,10 +92,22 @@
 				});
 			}
 		},
+		_onMoving: function(e) {
+			console.log('move');
+			if (this.fireToObjects) {
+				this._objects.forEach(function(obj) {
+					if (obj.type === 'connector') {
+						obj.trigger('group:move', e, obj);
+					}
+				});
+			}
+		},
 		_initEvents: function() {
 			this.on('mousedown', this._checkEventInObjects);
 			this.on('mouseup', this._checkEventInObjects);
 			this.on('mousemove', this._checkEventInObjects);
+			this.on('moving', this._onMoving);
+
 		},
 		clone: function () {
 			console.log(this);

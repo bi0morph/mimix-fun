@@ -14,6 +14,9 @@
 
 			fabric.Canvas.activeInstance = this;
 
+			this._initEvents();
+		},
+		_initEvents: function() {
 			function __chancelDrawingMode() {
 				this._currentTransform = false;
 				this.isDrawingMode = false;

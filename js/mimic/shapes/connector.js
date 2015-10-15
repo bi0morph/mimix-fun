@@ -20,19 +20,32 @@
 
 	mimic.Connector = fabric.util.createClass(fabric.Circle, {
 		type: 'connector',
+		connectedTo: null,
 		_initEvents: function() {
 			this.on('mousedown', function(event) {
-				console.log('circleRight mousedown', event, this);
-				var connectionBrush = new mimic.ConnectingBrush(this.canvas);
-				this.canvas.setDrawingMode(connectionBrush, event.e);
-			});
-			this.on('mouseup', function() {
-				//console.log('circleRight mouseup', arguments);
-			});
-			this.on('mousemove', function() {
-				console.log('circleRight mousemove', arguments);
+				if (!this.connectedTo) {
+					var connectionBrush = new mimic.ConnectingBrush(this.canvas, this);
+					this.canvas.setDrawingMode(connectionBrush, event.e);
+				}
 			});
 
+			this.on('group:move', function() {
+				if(this.connectedTo) {
+					var newPoint = this.getCenter(),
+						options = {},
+						number = this.connectedTo['position'];
+					options['x' + number] = newPoint.x;
+					options['y' + number] = newPoint.y;
+					console.log(options);
+					this.connectedTo['line'].set(options);
+				}
+			});
+		},
+		getCenter: function() {
+			return {
+				y: this.group.top + this.originalTop + this.radius,
+				x: this.group.left + this.originalLeft + this.radius
+			};
 		},
 		initialize: function (options) {
 			options = options || {};

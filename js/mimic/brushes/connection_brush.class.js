@@ -5,10 +5,14 @@
 
 	mimic.ConnectingBrush = fabric.util.createClass(fabric.BaseBrush, {
 
-		initialize: function(canvas) {
+		initialize: function(canvas, first) {
 			this.canvas = canvas;
 			this._points = [ ];
-			this._start = null;
+			this._connectors = {
+				first: first,
+				second: null
+			};
+			this._start = first.getCenter();
 			this._end = null;
 		},
 
@@ -16,11 +20,12 @@
 		 * Inovoked on mouse down
 		 * @param {Object} pointer
 		 */
-		onMouseDown: function(pointer) {
-			this._prepareForDrawing(pointer);
+		onMouseDown: function() {
+
+			this._prepareForDrawing(this._start);
 			// capture coordinates immediately
 			// this allows to draw dots (when movement never occurs)
-			this._captureDrawingPath(pointer);
+			this._captureDrawingPath(this._start);
 			this._render();
 		},
 
@@ -40,7 +45,12 @@
 		 * Invoked on mouse up
 		 */
 		onMouseUp: function(target) {
-			if (target && target.type === 'connector') {
+			if (target && target.type === 'connector' &&
+				this._connectors.first !== target &&
+					!target.connectedTo
+			) {
+				this._connectors.second = target;
+				this._end = target.getCenter();
 				this._finalizeAndAddPath();
 			} else {
 				this._reset();
@@ -78,7 +88,6 @@
 		 */
 		_reset: function() {
 			this._points.length = 0;
-
 			this._setBrushStyles();
 			this._setShadow();
 		},
@@ -151,7 +160,7 @@
 		},
 
 		createLine: function(start, end) {
-			var line = new fabric.Line([start.x, start.y, end.x, end.y], {
+			var line = new mimic.Connection([this._connectors.first, this._connectors.second], [start.x, start.y, end.x, end.y], {
 				fill: null,
 				stroke: this.color,
 				strokeWidth: this.width,
@@ -191,6 +200,16 @@
 			}
 
 			var line = this.createLine(this._start, this._end);
+			this._connectors.first.connectedTo = {
+				line: line,
+				point: this._end,
+				position: 1
+			};
+			this._connectors.second.connectedTo = {
+				line: line,
+				point: this._start,
+				position: 2
+			};
 
 			this.canvas.add(line);
 			line.setCoords();
@@ -200,7 +219,14 @@
 			this.canvas.renderAll();
 
 			// fire event 'line' created
-			this.canvas.fire('connection_line:created', { line: line });
+			this.canvas.fire('connection_line:created', {
+				connection: line,
+				connectors: [
+					this._connectors.first,
+					this._connectors.second
+					]
+			});
+
 		}
 	});
 })();
