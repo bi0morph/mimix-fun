@@ -32,7 +32,7 @@
 
 		var left = new mimic.SimpleGroupConnections({
 			top: 100,
-			left: 100,
+			left: 300,
 			hasControls: false,
 			hasBorders: false
 		});
@@ -43,9 +43,21 @@
 			hasBorders: false
 		});
 		canvas.add(left, right);
+
+
+		var leftPanel = new mimic.LeftPanel({
+			top: 0,
+			left: 0,
+			width: 140,
+			height: canvas.height,
+			hasControls: false,
+			hasBorders: false,
+			selectable: false
+		});
+
+		canvas.add(leftPanel);
+
 		canvas.renderAll();
-
-
 		//canvas.setActiveObject(group);
 		//getActiveObject
 		//discardActiveObject

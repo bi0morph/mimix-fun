@@ -20,8 +20,8 @@
 		rectangle: new fabric.Rect({
 			stroke : 'black',
 			fill: 'transparent',
-			width: 100,
-			height: 100,
+			width: 50,
+			height: 50,
 			top: 0,
 			left: 0,
 			selectable: false
@@ -93,7 +93,6 @@
 			}
 		},
 		_onMoving: function(e) {
-			console.log('move');
 			if (this.fireToObjects) {
 				this._objects.forEach(function(obj) {
 					if (obj.type === 'connector') {
@@ -107,15 +106,12 @@
 			this.on('mouseup', this._checkEventInObjects);
 			this.on('mousemove', this._checkEventInObjects);
 			this.on('moving', this._onMoving);
-
 		},
 		clone: function () {
-			console.log(this);
-			var newGroup = new fabric.GroupWithConnections({
+			var newGroup = new mimic.SimpleGroupConnections({
 				left: this.left,
 				top: this.top
 			});
-			console.log(newGroup);
 			return newGroup;
 		}
 	});
