@@ -36,7 +36,6 @@
 						number = this.connectedTo['position'];
 					options['x' + number] = newPoint.x;
 					options['y' + number] = newPoint.y;
-					console.log(options);
 					this.connectedTo['line'].set(options);
 				}
 			});

@@ -30,21 +30,6 @@
 		global.addEventListener('resize', this.resizeCanvas.bind(this), false);
 		this.resizeCanvas();
 
-		var left = new mimic.SimpleGroupConnections({
-			top: 100,
-			left: 300,
-			hasControls: false,
-			hasBorders: false
-		});
-		var right = new mimic.SimpleGroupConnections({
-			top: 200,
-			left: 500,
-			hasControls: false,
-			hasBorders: false
-		});
-		canvas.add(left, right);
-
-
 		var leftPanel = new mimic.LeftPanel({
 			top: 0,
 			left: 0,

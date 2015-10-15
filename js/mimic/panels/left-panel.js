@@ -40,13 +40,13 @@
 		_initEvents: function() {
 			this._objects.forEach(function(obj) {
 				obj.on('panel:mousedown', function(event) {
-					if(this.type !== 'rect') {
+					if(this.selectable) {
 						var temp = this.clone();
-						temp._originalLeft = this._originalLeft;
-						temp._originalTop = this._originalTop;
+						temp._originalLeft = temp.originalLeft = this._originalLeft || this.originalLeft || 0;
+						temp._originalTop = temp.originalTop = this._originalTop || this.originalTop || 0;
 						temp.set({
-							left: this._originalLeft + 1,
-							top: this._originalTop + 1,
+							left: temp.originalLeft + 1,
+							top: temp.originalTop + 1,
 							hasBorders: false,
 							hasControls: false
 						});
@@ -58,6 +58,7 @@
 			});
 
 			this.on('mousedown', function(event) {
+
 				var point = {
 					x: event.e.x - this.left,
 					y: event.e.y - this.top
@@ -71,24 +72,36 @@
 		},
 		_createObjects: function(options) {
 			var _objects = [];
-			console.log('_createObjects', options);
-			_objects.push( new fabric.Rect({
+			var pabelBg = new fabric.Rect({
 				top: 0,
 				left: 0,
 				width: options.width,
 				height: options.height,
-				fill: 'rgb(200, 225, 200)',
-				hasControls: false,
-				hasBorders: false,
+				fill: 'rgb(245, 250, 240)',
 				selectable: false
-			}) );
+			});
+			_objects.push( pabelBg );
 			_objects.push( new mimic.SimpleGroupConnections({
 				top: 15,
-				left: 15,
-				hasControls: false,
-				hasBorders: false,
-				selectable: false
+				left: 15
 			}) );
+			_objects.push( new fabric.Rect({
+				top: 75,
+				left: 15,
+				fill: 'red',
+				width: 50,
+				height: 50
+			}) );
+
+
+			_objects.push( new fabric.Circle({
+				radius: 25, fill: 'green', left: 75, top: 75
+			}) );
+
+			_objects.push( new fabric.Triangle({
+				width: 50, height: 50, fill: 'blue', left: 15, top: 140
+			}) );
+
 			return _objects;
 		},
 		complexity: function() {
