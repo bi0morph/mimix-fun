@@ -47,7 +47,6 @@
 						temp.set({
 							left: temp.originalLeft + 1,
 							top: temp.originalTop + 1,
-							hasBorders: false,
 							hasControls: false
 						});
 
@@ -77,7 +76,7 @@
 				left: 0,
 				width: options.width,
 				height: options.height,
-				fill: 'rgb(245, 250, 240)',
+				fill: 'rgb(245, 245, 245)',
 				selectable: false
 			});
 			_objects.push( pabelBg );
@@ -100,6 +99,11 @@
 
 			_objects.push( new fabric.Triangle({
 				width: 50, height: 50, fill: 'blue', left: 15, top: 140
+			}) );
+
+			_objects.push( new mimic.ControlValve({
+				top: 200,
+				left: 15
 			}) );
 
 			return _objects;

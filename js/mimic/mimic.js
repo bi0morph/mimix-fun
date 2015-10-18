@@ -42,11 +42,14 @@
 
 		canvas.add(leftPanel);
 
-		canvas.renderAll();
-		//canvas.setActiveObject(group);
-		//getActiveObject
-		//discardActiveObject
+		var controlValve = new mimic.ControlValve({
+			top: 200,
+			left: 300
+		});
 
+		canvas.add(controlValve);
+
+		canvas.renderAll();
 	}
 
 

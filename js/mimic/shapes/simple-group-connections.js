@@ -36,45 +36,46 @@
 	mimic.SimpleGroupConnections = fabric.util.createClass(fabric.Group, {
 		type: 'simple-group-connections',
 		fireToObjects: true,
-		initialize: function (options) {
-			var objects;
+		initialize: function (options, objects) {
 			options = options || {};
 
 			options.width = _default.rectangle.width + _default.line.width * 2 + _default.circle.radius * 4;
 			options.height = _default.rectangle.height;
 
-			var circleLeft = _default.circle.clone().set({
-					top: options.height / 2 - _default.circle.radius,
-					left: 0,
-					selectable: false
-				}),
-				circleRight = _default.circle.clone().set({
-					top: options.height / 2 - _default.circle.radius,
-					left: _default.line.width * 2 + _default.circle.radius * 2 + _default.rectangle.width,
-					selectable: false
-				}),
-				lineLeft = _default.line.clone().set({
-					x1: _default.circle.radius * 2,
-					x2: _default.circle.radius * 2 + _default.line.width,
-					y1: options.height / 2,
-					y2: options.height / 2,
-					selectable: false
-				}),
-				lineRight = _default.line.clone().set({
-					x1: _default.circle.radius * 2 + _default.line.width + _default.rectangle.width,
-					x2: _default.circle.radius * 2 + _default.line.width * 2 + _default.rectangle.width,
-					y1: options.height / 2,
-					y2: options.height / 2,
-					selectable: false
-				}),
-				rectangle = _default.rectangle.clone().set({
-					left: _default.circle.radius * 2 + _default.line.width,
-					selectable: false,
-					width: _default.rectangle.width,
-					height: options.height
-				});
+			if (!objects) {
+				var circleLeft = _default.circle.clone().set({
+						top: options.height / 2 - _default.circle.radius,
+						left: 0,
+						selectable: false
+					}),
+					circleRight = _default.circle.clone().set({
+						top: options.height / 2 - _default.circle.radius,
+						left: _default.line.width * 2 + _default.circle.radius * 2 + _default.rectangle.width,
+						selectable: false
+					}),
+					lineLeft = _default.line.clone().set({
+						x1: _default.circle.radius * 2,
+						x2: _default.circle.radius * 2 + _default.line.width,
+						y1: options.height / 2,
+						y2: options.height / 2,
+						selectable: false
+					}),
+					lineRight = _default.line.clone().set({
+						x1: _default.circle.radius * 2 + _default.line.width + _default.rectangle.width,
+						x2: _default.circle.radius * 2 + _default.line.width * 2 + _default.rectangle.width,
+						y1: options.height / 2,
+						y2: options.height / 2,
+						selectable: false
+					}),
+					rectangle = _default.rectangle.clone().set({
+						left: _default.circle.radius * 2 + _default.line.width,
+						selectable: false,
+						width: _default.rectangle.width,
+						height: options.height
+					});
+				objects = [circleLeft, circleRight, lineLeft, lineRight, rectangle];
+			}
 
-			objects = [circleLeft, circleRight, lineLeft, lineRight, rectangle];
 			this.callSuper('initialize', objects, options);
 
 			this._initEvents();
