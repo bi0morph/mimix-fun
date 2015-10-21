@@ -115,6 +115,17 @@
 				top: 250,
 				left: 15
 			}) );
+
+			_objects.push( new mimic.PipeLineIn({
+				top: 250,
+				left: 75
+			}) );
+
+			_objects.push( new mimic.PipeLineOut({
+				top: 300,
+				left: 15
+			}) );
+
 			return _objects;
 		},
 		complexity: function() {
