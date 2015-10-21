@@ -160,7 +160,6 @@
 			});
 			return actions;
 		},
-		_timeoutId: null,
 		actions: null,
 		setState: function(key) {
 			var checkState = function(stateCode) {

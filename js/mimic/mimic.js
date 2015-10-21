@@ -42,7 +42,7 @@
 
 		canvas.add(leftPanel);
 
-		//var controlValve = new mimic.SolenoidValve({
+		//var controlValve = new mimic.LEDCircularPump({
 		//	top: 200,
 		//	left: 300
 		//});

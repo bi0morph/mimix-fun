@@ -111,6 +111,10 @@
 				left: 75
 			}) );
 
+			_objects.push( new mimic.LEDCircularPump({
+				top: 250,
+				left: 15
+			}) );
 			return _objects;
 		},
 		complexity: function() {

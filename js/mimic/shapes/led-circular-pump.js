@@ -9,27 +9,24 @@
 		extend = fabric.util.object.extend;
 
 	var _states = {
-		opens: 0,
-		closed: 1,
+		on: 0,
+		working: 1,
 		faulty: 2,
 		notDetermined: 3
 	};
 	var _lineOptions = {
-			fill: 'black',
-			stroke: 'black',
-			strokeWidth: 1
-		};
-	mimic.SolenoidValve = fabric.util.createClass(fabric.Group, {
-		type: 'solenoid-valve',
+		fill: 'black',
+		stroke: 'black',
+		strokeWidth: 1
+	};
+	mimic.LEDCircularPump = fabric.util.createClass(fabric.Group, {
+		type: 'led-circular-pump',
 		state: 3,
 		stateCode: 'notDetermined',
 		_wrap: null,
-		_mainSquare: null,
-		_leftTriangle: null,
-		_rightTriangle: null,
-		_centerTriangle: null,
+		_mainCircle: null,
+		_mainTriangle: null,
 		_crossLines: null,
-		_connectLine: null,
 		_createWrap: function(total) {
 			this._wrap = new fabric.Rect({
 				top: 0,
@@ -40,64 +37,36 @@
 			});
 			return this._wrap;
 		},
-		_createMainSquare: function(total) {
-			this._mainSquare = new fabric.Rect({
-				width: total.width/2,
-				height: total.height/2,
-				fill: 'grey',
-				left: total.width/4,
+		_createMainCircle: function(total) {
+			this._mainCircle = new fabric.Circle({
+				radius: total.width/2,
+				fill: 'transparent',
+				left: 0,
 				top: 0,
 				stroke: 'black'
 			});
-			return this._mainSquare;
+			return this._mainCircle;
 		},
-		_createLRTreangles: function(total) {
-			this._leftTriangle = new fabric.Triangle({
-				width: total.width/2,
-				height: total.height/2,
-				fill: 'white',
-				left: total.width/4,
-				top: 3 * total.height/4,
+		_createTreangle: function(total) {
+			this._mainTriangle = new fabric.Triangle({
+				width: total.width * 5/8,
+				height: total.height * 5/8,
+				fill: 'rgb(200, 200, 200)',
+				left: total.width * 5/8,
+				top: total.height/2,
 				angle: 90,
-				stroke: 'black',
 				originX: 'center',
 				originY: 'center'
 			});
-			this._rightTriangle = this._leftTriangle.clone().set({
-				angle: 270,
-				top: 3 * total.height/4,
-				left: 3 * total.width/4 + 1
-			});
-			return {
-				left: this._leftTriangle,
-				right: this._rightTriangle
-			};
-		},
-		_createCenterTriangle: function(total) {
-			this._centerTriangle = new fabric.Triangle({
-				width: total.width/3,
-				height: total.height/3,
-				visible: false,
-				left: total.width/2,
-				top: total.height/4 - 1,
-				originX: 'center',
-				originY: 'center'
-			});
-			this._centerTriangle.normalTop = null;
-			this._centerTriangle.rotatedTop = null;
-			return this._centerTriangle;
-		},
-		_createConnectLine: function(total) {
-			var points = [total.width/2, total.height/2, total.width/2, 3 * total.height/4];
-			this._connectLine = new fabric.Line(points, _lineOptions);
-			return this._connectLine;
+
+			return this._mainTriangle;
 		},
 		_createCrossLines: function(total) {
 			var crossAllPoints = {
-					leftTop : { x: total.width/4 - 3, y: 0 },
-					rigthTop : { x: 3 * total.width/4 + 3, y: 0 },
-					rigthBottom : { x: 3 * total.width/4 + 3, y: total.height/2},
-					leftBottom : { x: total.width/4 - 3, y: total.height/2}
+					leftTop : { x: 3, y: 0 },
+					rigthTop : { x: total.width - 3, y: 0 },
+					rigthBottom : { x: total.width - 3, y: total.height},
+					leftBottom : { x: 3, y: total.height}
 				},
 				points;
 			this._crossLines = [];
@@ -113,19 +82,14 @@
 		_createObjects: function(total) {
 			var objects = [];
 			objects.push( this._createWrap(total) );
-			objects.push( this._createMainSquare(total) );
+			objects.push( this._createMainCircle(total) );
 
-			var treangles = this._createLRTreangles(total);
-			objects.push( treangles.left );
-			objects.push( treangles.right );
-
-			objects.push( this._createConnectLine(total) );
+			objects.push( this._createTreangle(total) );
 
 			var crossLines = this._createCrossLines(total);
 			objects.push( crossLines[0] );
 			objects.push( crossLines[1] );
 
-			objects.push( this._createCenterTriangle(total) );
 			return objects;
 		},
 		_createActions: function() {
@@ -134,15 +98,15 @@
 				title: 'Изменить состояние',
 				values: [
 					{
-						title: 'Клапан открыт',
-						value: 'opens'
+						title: 'включен',
+						value: 'on'
 					},
 					{
-						title: 'Клапан закрыт',
-						value: 'closed'
+						title: 'включен и работает',
+						value: 'working'
 					},
 					{
-						title: 'Клапан неисправен',
+						title: 'не исправен',
 						value: 'faulty'
 					},
 					{
@@ -164,39 +128,40 @@
 
 			console.log('setState' + key);
 			switch(key) {
-				case 'opens':
-					this._mainSquare.setFill('white');
+				case 'on':
+					this._mainTriangle.setFill('rgb(0, 150, 0)');
 					this._crossLines.forEach(function(line) {
 						line.set('visible', false);
 					});
-
-					this._centerTriangle.set({
-						visible: true,
-						angle: 0,
-						fill: 'rgb(0,200,0)'
-					});
-
-					this.state = _states.opens;
+					this.state = _states.on;
 					break;
-				case 'closed':
-					this._mainSquare.setFill('white');
+				case 'working':
+					this._mainTriangle.setFill('rgb(0, 150, 0)');
 					this._crossLines.forEach(function(line) {
 						line.set('visible', false);
 					});
+					var changeColor = function(collor) {
+						this._mainTriangle.setFill(collor);
+						this._mainTriangle.canvas.renderAll();
+					}.bind(this);
+					var startBlink = function(collor) {
+						collor = collor === 'rgb(0, 150, 0)' ? 'rgb(0, 200, 0)' : 'rgb(0, 150, 0)';
+						setTimeout(function() {
+							if (checkState('working')) {
+								changeColor(collor);
+								startBlink(collor);
+							}
+						}, 750);
+					}.bind(this);
+					startBlink('rgb(0, 150, 0)');
 
-					this._centerTriangle.set({
-						visible: true,
-						angle: 180,
-						fill: 'rgb(0,200,0)'
-					});
-
-					this.state = _states.closed;
+					this.state = _states.working;
 					break;
 				case 'faulty':
-					this._mainSquare.setFill('red');
+					this._mainTriangle.setFill('red');
 					var changeColor = function(collor) {
-						this._mainSquare.setFill(collor);
-						this._mainSquare.canvas.renderAll();
+						this._mainTriangle.setFill(collor);
+						this._mainTriangle.canvas.renderAll();
 					}.bind(this);
 					var startBlink = function(collor) {
 						collor = collor === 'red' ? 'yellow' : 'red';
@@ -207,25 +172,22 @@
 							}
 						}, 750);
 					}.bind(this)
-					startBlink('yellow');
+					startBlink('red');
 
 					this._crossLines.forEach(function(line) {
 						line.set('visible', false);
 					});
-					this._centerTriangle.set('visible', false);
 					this.state = _states.faulty;
 					break;
 				default:
-					this._mainSquare.setFill('grey');
-
+					this._mainTriangle.setFill('rgb(200, 200, 200)');
 					this._crossLines.forEach(function(line) {
 						line.set('visible', true);
 					});
-					this._centerTriangle.set('visible', false);
 					this.state = _states.notDetermined;
 			}
-			if (this._mainSquare.canvas) {
-				this._mainSquare.canvas.renderAll();
+			if (this._mainCircle.canvas) {
+				this._mainCircle.canvas.renderAll();
 			}
 		},
 		initialize: function (options) {
@@ -241,7 +203,7 @@
 			this.callSuper('initialize', objects, options);
 		},
 		clone: function () {
-			var newGroup = new mimic.SolenoidValve({
+			var newGroup = new mimic.LEDCircularPump({
 				left: this.left,
 				top: this.top
 			});

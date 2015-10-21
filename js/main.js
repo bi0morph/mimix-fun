@@ -13,8 +13,7 @@
 	rightPanel.init(function() {
 		mimic.canvas.on('object:selected', function(event){
 			console.log('object:selected', event.target);
-			if (event.target.type === "control-valve" ||
-				event.target.type === "solenoid-valve") {
+			if (event.target && event.target.actions) {
 				rightPanel.show();
 				rightPanel.render(event.target.actions, event.target.stateCode);
 			}
