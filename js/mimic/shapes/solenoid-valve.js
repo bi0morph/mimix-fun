@@ -1,5 +1,5 @@
 /**
- * Created by rus on 17.10.2015.
+ * Created by rus on 21.10.2015.
  */
 (function(global) {
 
@@ -9,23 +9,22 @@
 		extend = fabric.util.object.extend;
 
 	var _states = {
-		stoped: 0,
-		opens: 1,
-		closed: 2,
-		faulty: 3,
-		notDetermined: 4
+		opens: 0,
+		closed: 1,
+		faulty: 2,
+		notDetermined: 3
 	};
 	var _lineOptions = {
 			fill: 'black',
 			stroke: 'black',
 			strokeWidth: 1
 		};
-	mimic.ControlValve = fabric.util.createClass(fabric.Group, {
-		type: 'control-valve',
-		state: 4,
+	mimic.SolenoidValve = fabric.util.createClass(fabric.Group, {
+		type: 'solenoid-valve',
+		state: 3,
 		stateCode: 'notDetermined',
 		_wrap: null,
-		_mainCircle: null,
+		_mainSquare: null,
 		_leftTriangle: null,
 		_rightTriangle: null,
 		_centerTriangle: null,
@@ -41,15 +40,16 @@
 			});
 			return this._wrap;
 		},
-		_createMainCircle: function(total) {
-			this._mainCircle = new fabric.Circle({
-				radius: total.width/4,
+		_createMainSquare: function(total) {
+			this._mainSquare = new fabric.Rect({
+				width: total.width/2,
+				height: total.height/2,
 				fill: 'grey',
 				left: total.width/4,
 				top: 0,
 				stroke: 'black'
 			});
-			return this._mainCircle;
+			return this._mainSquare;
 		},
 		_createLRTreangles: function(total) {
 			this._leftTriangle = new fabric.Triangle({
@@ -113,7 +113,7 @@
 		_createObjects: function(total) {
 			var objects = [];
 			objects.push( this._createWrap(total) );
-			objects.push( this._createMainCircle(total) );
+			objects.push( this._createMainSquare(total) );
 
 			var treangles = this._createLRTreangles(total);
 			objects.push( treangles.left );
@@ -134,15 +134,11 @@
 				title: 'Изменить состояние',
 				values: [
 					{
-						title: 'Клапан остановлен',
-						value: 'stoped'
-					},
-					{
-						title: 'Клапан открывается',
+						title: 'Клапан открыт',
 						value: 'opens'
 					},
 					{
-						title: 'Клапан закрывается',
+						title: 'Клапан закрыт',
 						value: 'closed'
 					},
 					{
@@ -155,8 +151,8 @@
 					}
 				],
 				run: function(value) {
-						this.setState(value)
-					}.bind(this)
+					this.setState(value)
+				}.bind(this)
 			});
 			return actions;
 		},
@@ -169,18 +165,8 @@
 
 			console.log('setState' + key);
 			switch(key) {
-				case 'stoped':
-					this._mainCircle.setFill('rgb(0, 200, 0)');
-					this._crossLines.forEach(function(line) {
-						line.set('visible', false);
-					});
-					this._centerTriangle.set({
-						visible: false
-					});
-					this.state = _states.stoped;
-					break;
 				case 'opens':
-					this._mainCircle.setFill('white');
+					this._mainSquare.setFill('white');
 					this._crossLines.forEach(function(line) {
 						line.set('visible', false);
 					});
@@ -188,28 +174,13 @@
 					this._centerTriangle.set({
 						visible: true,
 						angle: 0,
-						fill: 'rgb(0,150,0)'
+						fill: 'rgb(0,200,0)'
 					});
-
-					var changeColoropens = function(collor) {
-						this._centerTriangle.setFill(collor);
-						this._centerTriangle.canvas.renderAll();
-					}.bind(this);
-					var startBlinkopens = function(collor) {
-						collor = collor === 'rgb(0,150,0)' ? 'rgb(0,225,0)' : 'rgb(0,150,0)';
-						setTimeout(function() {
-							if (checkState('opens')) {
-								changeColoropens(collor);
-								startBlinkopens(collor);
-							}
-						}, 750);
-					}.bind(this)
-					startBlinkopens('rgb(0,225,0)');
 
 					this.state = _states.opens;
 					break;
 				case 'closed':
-					this._mainCircle.setFill('white');
+					this._mainSquare.setFill('white');
 					this._crossLines.forEach(function(line) {
 						line.set('visible', false);
 					});
@@ -217,31 +188,16 @@
 					this._centerTriangle.set({
 						visible: true,
 						angle: 180,
-						fill: 'rgb(0,150,0)'
+						fill: 'rgb(0,200,0)'
 					});
-
-					var changeColorTriangle = function(collor) {
-						this._centerTriangle.setFill(collor);
-						this._centerTriangle.canvas.renderAll();
-					}.bind(this);
-					var startBlinkClosed = function(collor) {
-						collor = collor === 'rgb(0,150,0)' ? 'rgb(0,225,0)' : 'rgb(0,150,0)';
-						setTimeout(function() {
-							if (checkState('closed')) {
-								changeColorTriangle(collor);
-								startBlinkClosed(collor);
-							}
-						}, 750);
-					}.bind(this);
-					startBlinkClosed('rgb(0,225,0)');
 
 					this.state = _states.closed;
 					break;
 				case 'faulty':
-					this._mainCircle.setFill('red');
+					this._mainSquare.setFill('red');
 					var changeColor = function(collor) {
-						this._mainCircle.setFill(collor);
-						this._mainCircle.canvas.renderAll();
+						this._mainSquare.setFill(collor);
+						this._mainSquare.canvas.renderAll();
 					}.bind(this);
 					var startBlink = function(collor) {
 						collor = collor === 'red' ? 'yellow' : 'red';
@@ -261,7 +217,7 @@
 					this.state = _states.faulty;
 					break;
 				default:
-					this._mainCircle.setFill('grey');
+					this._mainSquare.setFill('grey');
 
 					this._crossLines.forEach(function(line) {
 						line.set('visible', true);
@@ -269,8 +225,8 @@
 					this._centerTriangle.set('visible', false);
 					this.state = _states.notDetermined;
 			}
-			if (this._mainCircle.canvas) {
-				this._mainCircle.canvas.renderAll();
+			if (this._mainSquare.canvas) {
+				this._mainSquare.canvas.renderAll();
 			}
 		},
 		initialize: function (options) {
@@ -286,7 +242,7 @@
 			this.callSuper('initialize', objects, options);
 		},
 		clone: function () {
-			var newGroup = new mimic.ControlValve({
+			var newGroup = new mimic.SolenoidValve({
 				left: this.left,
 				top: this.top
 			});

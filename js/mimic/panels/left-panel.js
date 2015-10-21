@@ -106,6 +106,11 @@
 				left: 15
 			}) );
 
+			_objects.push( new mimic.SolenoidValve({
+				top: 200,
+				left: 75
+			}) );
+
 			return _objects;
 		},
 		complexity: function() {

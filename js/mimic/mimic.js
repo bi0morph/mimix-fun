@@ -42,12 +42,12 @@
 
 		canvas.add(leftPanel);
 
-		var controlValve = new mimic.ControlValve({
-			top: 200,
-			left: 300
-		});
-
-		canvas.add(controlValve);
+		//var controlValve = new mimic.SolenoidValve({
+		//	top: 200,
+		//	left: 300
+		//});
+		//
+		//canvas.add(controlValve);
 
 		canvas.renderAll();
 	}
