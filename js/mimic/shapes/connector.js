@@ -9,12 +9,12 @@
 		fabric = global.fabric,
 		extend = fabric.util.object.extend,
 		_default = {
-			fill: 'transparent',
-			stroke: '#444',
+			fill: 'white',
+			stroke: 'black',
 			top: 0,
 			left: 0,
-			radius: 7,
-			strokeWidth: 2,
+			radius: 6,
+			strokeWidth: 1,
 			selectable: false
 		};
 
@@ -27,6 +27,16 @@
 					var connectionBrush = new mimic.ConnectingBrush(this.canvas, this);
 					this.canvas.setDrawingMode(connectionBrush, event.e);
 				}
+			});
+			this.on('mouseout', function(event) {
+				this.hovered = false;
+				this.setFill('white');
+				this.canvas.renderAll();
+			});
+			this.on('mousein', function(event) {
+				this.hovered = true;
+				this.setFill('gray');
+				this.canvas.renderAll();
 			});
 
 			this.on('group:move', function() {
