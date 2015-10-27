@@ -175,21 +175,11 @@
 				this.contextTop.restore();
 			}
 			var target = this.findTarget(e);
-			if (target && target.fireToObjects) {
-				var point = {
-					x: e.x - target.left,
-					y: e.y - target.top
-				};
-				target.getObjects().some(function(obj) {
-					if (__containtsPoint(obj, point)) {
-						target = obj;
-						return true;
-					}
-				});
+			if (target && target.fireToObjects && target.findTarget) {
+				target = target.findTarget(e);
 			}
 			this.freeDrawingBrush.onMouseUp(target);
 			this.fire('mouse:up', { e: e });
-
 
 			if (typeof target !== 'undefined') {
 				target.fire('mouseup', { e: e, target: target });

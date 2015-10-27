@@ -33,7 +33,7 @@
 		var leftPanel = new mimic.LeftPanel({
 			top: 0,
 			left: 0,
-			width: 140,
+			width: 160,
 			height: canvas.height,
 			hasControls: false,
 			hasBorders: false,

@@ -102,6 +102,20 @@
 				});
 			}
 		},
+		findTarget: function(e) {
+			var point = {
+				x: e.x - this.left,
+				y: e.y - this.top
+			};
+			var target;
+			this.getObjects().some(function(obj) {
+				if (obj.type === 'connector' && __containtsPoint(obj, point)) {
+					target = obj;
+					return true;
+				}
+			});
+			return target;
+		},
 		_initEvents: function() {
 			this.on('mousedown', this._checkEventInObjects);
 			this.on('mouseup', this._checkEventInObjects);

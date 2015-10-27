@@ -96,6 +96,22 @@
 			return newGroup;
 		},
 
+
+
+		findTarget: function(e) {
+			var point = {
+				x: e.x - this.left,
+				y: e.y - this.top
+			};
+			var target;
+			this.getObjects().some(function(obj) {
+				if (obj.type === 'connector' && __containtsPoint(obj, point)) {
+					target = obj;
+					return true;
+				}
+			});
+			return target;
+		},
 		_connections: [],
 		_createConnections: function(params) {
 			var top = params.height/4 - _default.circle.radius,
