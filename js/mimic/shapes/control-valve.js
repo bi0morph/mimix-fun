@@ -144,8 +144,6 @@
 
 			objects.push( this._createCenterTriangle(total) );
 
-			objects.push( this._createCenterTriangle(total) );
-
 			Array.prototype.push.apply(objects, this._createConnections(total));
 
 			return objects;

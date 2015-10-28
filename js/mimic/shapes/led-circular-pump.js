@@ -32,7 +32,7 @@
 				top: 0,
 				left: 0,
 				fill: 'transparent',
-				width: total.width,
+				width: total.width + this._padding * 2,
 				height: total.height
 			});
 			return this._wrap;
@@ -41,7 +41,7 @@
 			this._mainCircle = new fabric.Circle({
 				radius: total.width/2,
 				fill: 'transparent',
-				left: 0,
+				left: this._padding,
 				top: 0,
 				stroke: 'black'
 			});
@@ -52,7 +52,7 @@
 				width: total.width * 5/8,
 				height: total.height * 5/8,
 				fill: 'rgb(200, 200, 200)',
-				left: total.width * 5/8,
+				left: total.width * 5/8 + this._padding,
 				top: total.height/2,
 				angle: 90,
 				originX: 'center',
@@ -63,10 +63,10 @@
 		},
 		_createCrossLines: function(total) {
 			var crossAllPoints = {
-					leftTop : { x: 3, y: 0 },
-					rigthTop : { x: total.width - 3, y: 0 },
-					rigthBottom : { x: total.width - 3, y: total.height},
-					leftBottom : { x: 3, y: total.height}
+					leftTop : { x: 3 + this._padding, y: 0 },
+					rigthTop : { x: total.width - 3 + this._padding, y: 0 },
+					rigthBottom : { x: total.width - 3 + this._padding, y: total.height},
+					leftBottom : { x: 3 + this._padding, y: total.height}
 				},
 				points;
 			this._crossLines = [];
@@ -90,7 +90,25 @@
 			objects.push( crossLines[0] );
 			objects.push( crossLines[1] );
 
+			Array.prototype.push.apply(objects, this._createConnections(total));
 			return objects;
+		},
+		_createConnections: function(params) {
+			var top = params.height /2 - this._padding,
+				circleLeft = this._createConnection(),
+				circleRight = this._createConnection();
+			circleLeft.set({
+				top: top,
+				left: 0,
+				selectable: false
+			});
+			circleRight.set({
+				top: top,
+				left: params.width,
+				selectable: false
+			});
+			this._connections = [ circleLeft, circleRight ];
+			return this._connections;
 		},
 		_createActions: function() {
 			var actions = [];
@@ -201,6 +219,7 @@
 
 			this.actions = this._createActions();
 			this.callSuper('initialize', objects, options);
+			this._initEvents();
 		},
 		clone: function () {
 			var newGroup = new mimic.LEDCircularPump({
