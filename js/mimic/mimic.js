@@ -42,13 +42,12 @@
 
 		canvas.add(leftPanel);
 
-		var controlValve = new mimic.PipeLine('red', {
+		var controlValve = new mimic.GroupWithConnections(false, {
 			top: 200,
 			left: 300
 		});
 
 		canvas.add(controlValve);
-
 		canvas.renderAll();
 	}
 

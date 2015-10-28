@@ -80,10 +80,7 @@
 				selectable: false
 			});
 			_objects.push( pabelBg );
-			_objects.push( new mimic.SimpleGroupConnections({
-				top: 15,
-				left: 15
-			}) );
+
 			_objects.push( new fabric.Rect({
 				top: 75,
 				left: 15,
