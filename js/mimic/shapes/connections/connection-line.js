@@ -8,8 +8,8 @@
 	var mimic = global.mimic || (global.mimic = { }),
 		fabric = global.fabric;
 
-	mimic.Connection = fabric.util.createClass(fabric.Line, {
-		type: 'connection',
+	mimic.ConnectionLine = fabric.util.createClass(fabric.Line, {
+		type: 'connection-line',
 		connectors: [],
 		initialize: function (connectors, points, options) {
 			options = options || {};

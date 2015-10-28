@@ -3,8 +3,8 @@
  */
 (function() {
 
-	mimic.ConnectingBrush = fabric.util.createClass(fabric.BaseBrush, {
-
+	mimic.ConnectingLineBrush = fabric.util.createClass(fabric.BaseBrush, {
+		type: 'connecting-line-brush',
 		initialize: function(canvas, first) {
 			this.canvas = canvas;
 			this._points = [ ];

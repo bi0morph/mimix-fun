@@ -24,7 +24,7 @@
 		_initEvents: function() {
 			this.on('mousedown', function(event) {
 				if (!this.connectedTo) {
-					var connectionBrush = new mimic.ConnectingBrush(this.canvas, this);
+					var connectionBrush = new mimic.ConnectingPathBrush(this.canvas, this); // ConnectingLineBrush
 					this.canvas.setDrawingMode(connectionBrush, event.e);
 				}
 			});
