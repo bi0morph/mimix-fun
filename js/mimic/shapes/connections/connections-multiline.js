@@ -33,8 +33,14 @@
 			if (!this.strokeDashArray || this.strokeDashArray && supportsLineDash) {
 				// move from center (of virtual box) to its left/top corner
 				// we can't assume x1, y1 is top left and x2, y2 is bottom right
-				var p = this.calcLinePoints();
+				var p = this.calcLinePoints(),
+					middleX;
 				ctx.moveTo(p.x1, p.y1);
+				if (p.x1 !== p.x2) {
+					middleX = p.x1 + (p.x2 - p.x1)/2;
+					ctx.lineTo(middleX, p.y1);
+					ctx.lineTo(middleX, p.y2);
+				}
 				ctx.lineTo(p.x2, p.y2);
 			}
 

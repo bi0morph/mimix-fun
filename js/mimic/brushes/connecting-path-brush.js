@@ -167,7 +167,7 @@
 		},
 
 		createLine: function(start, end) {
-			var line = new mimic.ConnectionLine([this._connectors.first, this._connectors.second], [start.x, start.y, end.x, end.y], {
+			var line = new mimic.ConnectionMultiLine([this._connectors.first, this._connectors.second], [start.x, start.y, end.x, end.y], {
 				fill: null,
 				stroke: this.color,
 				strokeWidth: this.width,
