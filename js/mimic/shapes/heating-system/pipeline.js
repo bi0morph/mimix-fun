@@ -50,7 +50,7 @@
 				width: params.height/2,
 				height: params.height/2,
 				fill: params.color,
-				left: params.height/4 + this._padding + Math.floor( params.width / 2 ),
+				left: Math.floor(params.width * 3/4)+ this._padding,
 				top: 0,
 				angle: 90
 			});
@@ -81,7 +81,7 @@
 				height: 40,
 				color: color || 'black'
 			};
-
+			this._padding = 0;
 			this.collor = params.color;
 			objects = this._createObjects(params);
 
