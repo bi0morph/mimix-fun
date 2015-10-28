@@ -35,7 +35,7 @@
 				top: 0,
 				left: 0,
 				fill: 'transparent',
-				width: total.width,
+				width: total.width + this._padding * 2,
 				height: total.height
 			});
 			return this._wrap;
@@ -45,7 +45,7 @@
 				width: total.width/2,
 				height: total.height/2,
 				fill: 'grey',
-				left: total.width/4,
+				left: total.width/4 + this._padding,
 				top: 0,
 				stroke: 'black'
 			});
@@ -56,7 +56,7 @@
 				width: total.width/2,
 				height: total.height/2,
 				fill: 'white',
-				left: total.width/4,
+				left: total.width/4 + this._padding,
 				top: 3 * total.height/4,
 				angle: 90,
 				stroke: 'black',
@@ -66,7 +66,7 @@
 			this._rightTriangle = this._leftTriangle.clone().set({
 				angle: 270,
 				top: 3 * total.height/4,
-				left: 3 * total.width/4 + 1
+				left: 3 * total.width/4 + 1 + this._padding
 			});
 			return {
 				left: this._leftTriangle,
@@ -78,7 +78,7 @@
 				width: total.width/3,
 				height: total.height/3,
 				visible: false,
-				left: total.width/2,
+				left: total.width/2 + this._padding,
 				top: total.height/4 - 1,
 				originX: 'center',
 				originY: 'center'
@@ -88,16 +88,16 @@
 			return this._centerTriangle;
 		},
 		_createConnectLine: function(total) {
-			var points = [total.width/2, total.height/2, total.width/2, 3 * total.height/4];
+			var points = [total.width/2 + this._padding, total.height/2, total.width/2 + this._padding, 3 * total.height/4];
 			this._connectLine = new fabric.Line(points, _lineOptions);
 			return this._connectLine;
 		},
 		_createCrossLines: function(total) {
 			var crossAllPoints = {
-					leftTop : { x: total.width/4 - 3, y: 0 },
-					rigthTop : { x: 3 * total.width/4 + 3, y: 0 },
-					rigthBottom : { x: 3 * total.width/4 + 3, y: total.height/2},
-					leftBottom : { x: total.width/4 - 3, y: total.height/2}
+					leftTop : { x: total.width/4 - 3 + this._padding, y: 0 },
+					rigthTop : { x: 3 * total.width/4 + 3 + this._padding, y: 0 },
+					rigthBottom : { x: 3 * total.width/4 + 3 + this._padding, y: total.height/2},
+					leftBottom : { x: total.width/4 - 3 + this._padding, y: total.height/2}
 				},
 				points;
 			this._crossLines = [];
@@ -110,6 +110,23 @@
 
 			return this._crossLines;
 		},
+		_createConnections: function(params) {
+			var top = params.height * 3/4 - this._padding,
+				circleLeft = this._createConnection(),
+				circleRight = this._createConnection();
+			circleLeft.set({
+				top: top,
+				left: 0,
+				selectable: false
+			});
+			circleRight.set({
+				top: top,
+				left: params.width,
+				selectable: false
+			});
+			this._connections = [ circleLeft, circleRight ];
+			return this._connections;
+		},
 		_createObjects: function(total) {
 			var objects = [];
 			objects.push( this._createWrap(total) );
@@ -121,11 +138,11 @@
 
 			objects.push( this._createConnectLine(total) );
 
-			var crossLines = this._createCrossLines(total);
-			objects.push( crossLines[0] );
-			objects.push( crossLines[1] );
+			Array.prototype.push.apply(objects, this._createCrossLines(total));
 
 			objects.push( this._createCenterTriangle(total) );
+
+			Array.prototype.push.apply(objects, this._createConnections(total));
 			return objects;
 		},
 		_createActions: function() {
@@ -239,6 +256,7 @@
 
 			this.actions = this._createActions();
 			this.callSuper('initialize', objects, options);
+			this._initEvents();
 		},
 		clone: function () {
 			var newGroup = new mimic.SolenoidValve({
