@@ -48,7 +48,6 @@
 						temp.set({
 							left: temp.originalLeft + 1,
 							top: temp.originalTop + 1,
-							hasControls: false,
 							fireToObjects: false
 						});
 						temp.on('mouseup', function(e) {

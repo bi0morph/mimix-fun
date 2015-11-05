@@ -180,7 +180,6 @@
 				return this.state === _states[stateCode];
 			}.bind(this);
 
-			console.log('setState' + key);
 			switch(key) {
 				case 'opens':
 					this._mainSquare.setFill('white');

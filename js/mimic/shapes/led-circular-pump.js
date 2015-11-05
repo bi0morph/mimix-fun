@@ -145,7 +145,6 @@
 				return this.state === _states[stateCode];
 			}.bind(this);
 
-			console.log('setState' + key);
 			switch(key) {
 				case 'on':
 					this._mainTriangle.setFill('rgb(0, 150, 0)');

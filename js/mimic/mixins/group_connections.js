@@ -26,8 +26,18 @@
 		})
 	};
 	var __containtsPoint = function(obj, point) {
-		return obj.originalLeft < point.x && point.x < (obj.originalLeft + obj.width) &&
-			obj.originalTop < point.y && point.y < (obj.originalTop + obj.height);
+		var objPoint = {
+			tp: {
+				x: obj.originalLeft * point.scaleX,
+				y: obj.originalTop * point.scaleY
+			},
+			rb: {
+				x: (obj.originalLeft + obj.width) * point.scaleX,
+				y: (obj.originalTop + obj.height) * point.scaleY
+			}
+		};
+		return objPoint.tp.x < point.x && point.x < objPoint.rb.x &&
+			objPoint.tp.y < point.y && point.y < objPoint.rb.y;
 	};
 
 	fabric.util.object.extend(fabric.Group.prototype, {
@@ -54,7 +64,9 @@
 		findTarget: function(e) {
 			var point = {
 				x: e.x - this.left,
-				y: e.y - this.top
+				y: e.y - this.top,
+				scaleX: this.scaleX,
+				scaleY: this.scaleY
 			};
 			var target;
 			this.getObjects().some(function(obj) {
@@ -90,8 +102,11 @@
 
 			var point = {
 				x: event.e.x - this.left,
-				y: event.e.y - this.top
+				y: event.e.y - this.top,
+				scaleX: this.scaleX,
+				scaleY: this.scaleY
 			};
+			var self = this;
 			if (this.fireToObjects) {
 				this._objects.forEach(function(obj) {
 					if (obj.type === 'connector') {
@@ -116,6 +131,15 @@
 				});
 			}
 		},
+		_onScaling: function(e) {
+			if (this.fireToObjects) {
+				this._objects.forEach(function(obj) {
+					if (obj.type === 'connector') {
+						obj.trigger('group:scaling', e, obj);
+					}
+				});
+			}
+		},
 		_onMouseOut: function() {
 			if (this.fireToObjects) {
 				this._objects.forEach(function(obj) {
@@ -131,6 +155,7 @@
 			this.on('mousemove', this._checkEventInObjects);
 			this.on('mouseout', this._onMouseOut);
 			this.on('moving', this._onMoving);
+			this.on('scaling', this._onScaling);
 		}
 	});
 })(typeof exports !== 'undefined' ? exports : this);

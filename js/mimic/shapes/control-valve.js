@@ -187,7 +187,6 @@
 				return this.state === _states[stateCode];
 			}.bind(this);
 
-			console.log('setState' + key);
 			switch(key) {
 				case 'stoped':
 					this._mainCircle.setFill('rgb(0, 200, 0)');

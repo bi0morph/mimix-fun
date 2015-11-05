@@ -40,7 +40,6 @@
 						});
 						select.onchange = function() {
 							action.run(this.options[this.selectedIndex].value);
-							console.log('change', this.options[this.selectedIndex].value);
 						};
 						_rightPanel.appendChild(label);
 						_rightPanel.appendChild(select);
