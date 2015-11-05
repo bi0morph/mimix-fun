@@ -85,7 +85,8 @@
 			circleRight.set({
 				top: top,
 				left: params.width,
-				selectable: false
+				selectable: false,
+				position: 'right'
 			});
 			this._connections = [ circleLeft, circleRight ];
 			return this._connections;

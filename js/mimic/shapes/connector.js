@@ -20,6 +20,7 @@
 
 	mimic.Connector = fabric.util.createClass(fabric.Circle, {
 		type: 'connector',
+		position: 'left',
 		connectedTo: null,
 		_initEvents: function() {
 			this.on('mousedown', function(event) {

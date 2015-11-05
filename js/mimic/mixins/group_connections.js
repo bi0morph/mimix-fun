@@ -79,7 +79,8 @@
 				circleRight = _default.circle.clone().set({
 					top: top,
 					left: params.width + this._padding - _default.circle.radius,
-					selectable: false
+					selectable: false,
+					position: 'right'
 				});
 			this._connections = [ circleLeft, circleRight ];
 			return this._connections;

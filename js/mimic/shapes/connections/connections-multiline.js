@@ -34,13 +34,24 @@
 				// move from center (of virtual box) to its left/top corner
 				// we can't assume x1, y1 is top left and x2, y2 is bottom right
 				var p = this.calcLinePoints(),
+					pNear = {
+						x1: p.x1,
+						y1: p.y1,
+						x2: p.x2,
+						y2: p.y2
+					},
 					middleX;
 				ctx.moveTo(p.x1, p.y1);
-				if (p.x1 !== p.x2) {
-					middleX = p.x1 + (p.x2 - p.x1)/2;
-					ctx.lineTo(middleX, p.y1);
-					ctx.lineTo(middleX, p.y2);
+				pNear.x1 = pNear.x1 + (this.connectors[0].position === 'left' ? -2 : 2) * this.connectors[0].radius;
+				pNear.x2 = pNear.x2 + (this.connectors[1].position === 'left' ? -2 : 2) * this.connectors[1].radius;
+
+				ctx.lineTo(pNear.x1, pNear.y1);
+				if (pNear.x1 !== pNear.x2) {
+					middleX = pNear.x1 + (pNear.x2 - pNear.x1)/2;
+					ctx.lineTo(middleX, pNear.y1);
+					ctx.lineTo(middleX, pNear.y2);
 				}
+				ctx.lineTo(pNear.x2, pNear.y2);
 				ctx.lineTo(p.x2, p.y2);
 			}
 

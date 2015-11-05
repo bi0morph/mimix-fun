@@ -111,7 +111,19 @@
 			var ctx  = this.canvas.contextTop,
 				v = this.canvas.viewportTransform,
 				p1 = this._start,
-				p2 = this._end;
+				p2 = this._end,
+				pNear1 = {
+					x: p1.x,
+					y: p1.y,
+				},
+				firstGroupBox = {
+					width: this._connectors.first.group.width,
+					height: this._connectors.first.group.height,
+					top: this._connectors.first.group.top,
+					left: this._connectors.first.group.left
+				};
+
+			pNear1.x = pNear1.x + (this._connectors.first.position === 'left' ? -2 : 2) * this._connectors.first.radius;
 
 			ctx.save();
 			ctx.transform(v[0], v[1], v[2], v[3], v[4], v[5]);
@@ -128,9 +140,10 @@
 
 			var middleX;
 			ctx.moveTo(p1.x, p1.y);
-			if (p1.y !== p2.y || p1.x !== p2.x) {
-				middleX = p1.x + (p2.x - p1.x) / 2;
-				ctx.lineTo(middleX, p1.y);
+			ctx.lineTo(pNear1.x, pNear1.y);
+			if (pNear1.y !== p2.y || pNear1.x !== p2.x) {
+				middleX = pNear1.x + (p2.x - pNear1.x) / 2;
+				ctx.lineTo(middleX, pNear1.y);
 				ctx.lineTo(middleX, p2.y);
 			}
 			ctx.lineTo(p2.x, p2.y);
