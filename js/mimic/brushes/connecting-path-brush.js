@@ -138,15 +138,64 @@
 				p2.x += 0.5;
 			}
 
-			var middleX;
+			var additionalPoints = [],
+				firstBox = {
+					top: this._connectors.first.group.top - this._connectors.first.radius,
+					left: this._connectors.first.group.left - this._connectors.first.radius,
+					bottom: this._connectors.first.group.top + this._connectors.first.group.height + this._connectors.first.radius,
+					right: this._connectors.first.group.top + this._connectors.first.group.width + this._connectors.first.radius
+				},
+				middleX, tmpPoint;
 			ctx.moveTo(p1.x, p1.y);
 			ctx.lineTo(pNear1.x, pNear1.y);
 			if (pNear1.y !== p2.y || pNear1.x !== p2.x) {
 				middleX = pNear1.x + (p2.x - pNear1.x) / 2;
-				ctx.lineTo(middleX, pNear1.y);
-				ctx.lineTo(middleX, p2.y);
+
+				if (this._connectors.first.position === 'left' && middleX > pNear1.x ||
+					this._connectors.first.position === 'right' && middleX < pNear1.x
+				) {
+					middleX = pNear1.x;
+				}
+				additionalPoints.push({
+					x: middleX,
+					y: pNear1.y
+				});
+				tmpPoint = {
+					x: middleX,
+					y: p2.y
+				};
+
+				if (firstBox.top <= p2.y && firstBox.bottom >= p2.y && (this._connectors.first.position === 'left' && p2.x > firstBox.right ||
+					this._connectors.first.position === 'right'  && p2.x < firstBox.left)) {
+					if (p2.y < pNear1.y) {
+						tmpPoint.y = firstBox.top;
+					} else {
+						tmpPoint.y = firstBox.bottom;
+					}
+					additionalPoints.push({
+						x: middleX,
+						y: tmpPoint.y
+					});
+					additionalPoints.push({
+						x: p2.x,
+						y: tmpPoint.y
+					});
+				} else {
+					additionalPoints.push({
+						x: middleX,
+						y: p2.y
+					});
+				}
 			}
-			ctx.lineTo(p2.x, p2.y);
+			additionalPoints.push({
+				x: p2.x,
+				y: p2.y
+			});
+
+			additionalPoints.forEach(function(point) {
+				ctx.lineTo(point.x, point.y);
+			});
+
 			ctx.stroke();
 			ctx.restore();
 		},
