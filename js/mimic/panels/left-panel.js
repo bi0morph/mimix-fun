@@ -48,12 +48,15 @@
 						temp.set({
 							left: temp.originalLeft + 1,
 							top: temp.originalTop + 1,
-							fireToObjects: false
+							fireToObjects: false,
+							hasControls: false
 						});
 						temp.on('mouseup', function(e) {
 							if(e.e.x < self.left + self.width) {
 								this.canvas.remove(temp);
 							}
+							temp.hasControls = true;
+							this.canvas.renderAll();
 							if (!this.fireToObjects) {
 								this.fireToObjects = true;
 							}
