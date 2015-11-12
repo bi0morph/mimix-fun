@@ -7,10 +7,32 @@
   var mimic  = global.mimic || (global.mimic = {
 				canvas: null,
 				init: _init,
-				resizeCanvas: _resizeCanvas
+				resizeCanvas: _resizeCanvas,
+				startEdit: _startEdit,
+				stopEdit: _stopEdit
 			}),
 		fabric  = global.fabric;
 
+	function _startEdit() {
+		this.canvas.getObjects().forEach(function(obj) {
+			if (obj.type != 'left-panel') {
+				obj.showConnections && obj.showConnections();
+				obj.selectable = true;
+			}
+		});
+		this.canvas.deactivateAll();
+		this.canvas.renderAll();
+	}
+	function _stopEdit() {
+		this.canvas.getObjects().forEach(function(obj) {
+			if (obj.type != 'left-panel') {
+				obj.hideConnections && obj.hideConnections();
+				obj.selectable = false;
+			}
+		});
+		this.canvas.deactivateAll();
+		this.canvas.renderAll();
+	}
   function _resizeCanvas() {
 		if (this.canvas) {
 			this.canvas.setHeight(window.innerHeight);

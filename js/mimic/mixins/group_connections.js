@@ -70,7 +70,7 @@
 			};
 			var target;
 			this.getObjects().some(function(obj) {
-				if (obj.type === 'connector' && __containtsPoint(obj, point)) {
+				if (obj.type === 'connector' && obj.visible && __containtsPoint(obj, point)) {
 					target = obj;
 					return true;
 				}
@@ -109,7 +109,7 @@
 			var self = this;
 			if (this.fireToObjects) {
 				this._objects.forEach(function(obj) {
-					if (obj.type === 'connector') {
+					if (obj.type === 'connector' && obj.visible) {
 						if (__containtsPoint(obj, point)) {
 							if(!obj.hovered) {
 								obj.trigger('mousein', event);
@@ -125,11 +125,25 @@
 		_onMoving: function(e) {
 			if (this.fireToObjects) {
 				this._objects.forEach(function(obj) {
-					if (obj.type === 'connector') {
+					if (obj.type === 'connector' && obj.visible) {
 						obj.trigger('group:move', e, obj);
 					}
 				});
 			}
+		},
+		hideConnections: function() {
+			this._objects.forEach(function(obj) {
+				if (obj.type === 'connector') {
+					obj.visible = false;
+				}
+			});
+		},
+		showConnections: function() {
+			this._objects.forEach(function(obj) {
+				if (obj.type === 'connector') {
+					obj.visible = true;
+				}
+			});
 		},
 		_onScaling: function(e) {
 			if (this.fireToObjects) {
