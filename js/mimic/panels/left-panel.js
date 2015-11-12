@@ -56,6 +56,7 @@
 								this.canvas.remove(temp);
 							}
 							temp.hasControls = true;
+							temp.showConnections && temp.showConnections();
 							this.canvas.renderAll();
 							if (!this.fireToObjects) {
 								this.fireToObjects = true;

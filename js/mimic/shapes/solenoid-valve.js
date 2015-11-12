@@ -107,7 +107,8 @@
 
 			points = [crossAllPoints.leftBottom.x, crossAllPoints.leftBottom.y, crossAllPoints.rigthTop.x, crossAllPoints.rigthTop.y];
 			this._crossLines[1] = new fabric.Line(points, _lineOptions);
-
+			this._crossLines[0].visible = false;
+			this._crossLines[1].visible = false;
 			return this._crossLines;
 		},
 		_createConnections: function(params) {
@@ -117,13 +118,15 @@
 			circleLeft.set({
 				top: top,
 				left: 0,
-				selectable: false
+				selectable: false,
+				visible: false
 			});
 			circleRight.set({
 				top: top,
 				left: params.width,
 				selectable: false,
-				position: 'right'
+				position: 'right',
+				visible: false
 			});
 			this._connections = [ circleLeft, circleRight ];
 			return this._connections;
