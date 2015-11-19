@@ -22,6 +22,7 @@
 	mimic.LEDCircularPump = fabric.util.createClass(fabric.Group, {
 		type: 'led-circular-pump',
 		state: 3,
+		padding: 10,
 		stateCode: 'notDetermined',
 		_wrap: null,
 		_mainCircle: null,

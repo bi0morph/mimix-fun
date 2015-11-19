@@ -34,11 +34,11 @@
 		_line: null,
 		_triangle: null,
 		_wrapper: null,
-		_padding: 6,
+		padding: 10,
 		_createLine: function(params) {
 			var strokeWidth = 4,
 				top = params.height/4 - strokeWidth/2;
-			this._line = new fabric.Line([this._padding, top, params.width + this._padding, top], {
+			this._line = new fabric.Line([this.padding, top, params.width + this.padding, top], {
 				fill: params.color,
 				stroke: params.color,
 				strokeWidth: strokeWidth
@@ -50,7 +50,7 @@
 				width: params.height/2,
 				height: params.height/2,
 				fill: params.color,
-				left: Math.floor(params.width * 3/4)+ this._padding,
+				left: Math.floor(params.width * 3/4)+ this.padding,
 				top: 0,
 				angle: 90
 			});
@@ -58,7 +58,7 @@
 		},
 		_createWrapper: function(params) {
 			this._wrapper = _default.rectangle.clone().set({
-				width: params.width + 2 * this._padding,
+				width: params.width + 2 * this.padding,
 				height: params.height/2
 			});
 
@@ -81,7 +81,6 @@
 				height: 40,
 				color: color || 'black'
 			};
-			this._padding = 0;
 			this.collor = params.color;
 			objects = this._createObjects(params);
 
@@ -123,7 +122,7 @@
 				}),
 				circleRight = _default.circle.clone().set({
 					top: top,
-					left: params.width + this._padding - _default.circle.radius,
+					left: params.width + this.padding - _default.circle.radius,
 					selectable: false,
 					visible: false
 				});

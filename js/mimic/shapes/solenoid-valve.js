@@ -22,6 +22,7 @@
 	mimic.SolenoidValve = fabric.util.createClass(fabric.Group, {
 		type: 'solenoid-valve',
 		state: 3,
+		padding: 10,
 		stateCode: 'notDetermined',
 		_wrap: null,
 		_mainSquare: null,

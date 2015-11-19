@@ -24,6 +24,7 @@
 		type: 'control-valve',
 		state: 4,
 		stateCode: 'notDetermined',
+		padding: 10,
 		_wrap: null,
 		_mainCircle: null,
 		_leftTriangle: null,
