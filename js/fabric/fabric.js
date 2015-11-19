@@ -9264,6 +9264,9 @@ fabric.PatternBrush = fabric.util.createClass(fabric.PencilBrush, /** @lends fab
       addListener(this.upperCanvasEl, 'mousemove', this._onMouseMove);
       addListener(this.upperCanvasEl, 'mousewheel', this._onMouseWheel);
 
+			addListener(this.upperCanvasEl, 'dblclick', this._onDoubleClick);
+
+
       // touch events
       addListener(this.upperCanvasEl, 'touchstart', this._onMouseDown);
       addListener(this.upperCanvasEl, 'touchmove', this._onMouseMove);
@@ -9283,6 +9286,8 @@ fabric.PatternBrush = fabric.util.createClass(fabric.PencilBrush, /** @lends fab
     _bindEvents: function() {
       this._onMouseDown = this._onMouseDown.bind(this);
       this._onMouseMove = this._onMouseMove.bind(this);
+			this._onDoubleClick = this._onDoubleClick.bind(this);
+
       this._onMouseUp = this._onMouseUp.bind(this);
       this._onResize = this._onResize.bind(this);
       this._onGesture = this._onGesture.bind(this);
@@ -9301,6 +9306,8 @@ fabric.PatternBrush = fabric.util.createClass(fabric.PencilBrush, /** @lends fab
 
       removeListener(this.upperCanvasEl, 'mousedown', this._onMouseDown);
       removeListener(this.upperCanvasEl, 'mousemove', this._onMouseMove);
+			removeListener(this.upperCanvasEl, 'dblclick', this._onDoubleClick);
+
       removeListener(this.upperCanvasEl, 'mousewheel', this._onMouseWheel);
 
       removeListener(this.upperCanvasEl, 'touchstart', this._onMouseDown);
@@ -9594,7 +9601,22 @@ fabric.PatternBrush = fabric.util.createClass(fabric.PencilBrush, /** @lends fab
         target.fire('mousemove', { e: e, target: target });
       }
     },
+		_onDoubleClick: function (e) {
+			var self = this;
 
+			var target = self.findTarget(e);
+			self.fire('mouse:dblclick', {
+				target: target,
+				e: e
+			});
+
+			if (target && !self.isDrawingMode) {
+				// To unify the behavior, the object's double click event does not fire on drawing mode.
+				target.fire('object:dblclick', {
+					e: e
+				});
+			}
+		},
     /**
      * @private
      * @param {Event} e Event object fired on mouseup
