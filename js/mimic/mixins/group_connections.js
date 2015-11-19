@@ -7,6 +7,7 @@
 (function(global) {
 
 	var fabric = global.fabric,
+		clone = fabric.util.object.clone,
 		mimic = global.mimic;
 
 	var _default = {
@@ -25,8 +26,27 @@
 			selectable: false
 		})
 	};
-	var __containtsPoint = function(obj, point) {
-		var objPoint = {
+	var _getBoundingBoxFromGroup = function(obj) {
+		var objTmp = clone( obj),
+			groupTmp = obj.group,
+			bound;
+
+		groupTmp._setObjectPosition(objTmp);
+		objTmp.setCoords();
+		objTmp.hasControls = objTmp.__origHasControls;
+		delete objTmp.__origHasControls;
+		objTmp.set('active', false);
+		objTmp.setCoords();
+		delete objTmp.group;
+
+		bound = objTmp.getBoundingRect();
+
+		return bound;
+	};
+
+	var __containtsPoint = function(obj, point, e) {
+		var bound = _getBoundingBoxFromGroup(obj),
+			objPoint = {
 			tp: {
 				x: obj.originalLeft * point.scaleX,
 				y: obj.originalTop * point.scaleY
@@ -36,8 +56,10 @@
 				y: (obj.originalTop + obj.height) * point.scaleY
 			}
 		};
-		return objPoint.tp.x < point.x && point.x < objPoint.rb.x &&
-			objPoint.tp.y < point.y && point.y < objPoint.rb.y;
+		//return objPoint.tp.x < point.x && point.x < objPoint.rb.x &&
+		//			objPoint.tp.y < point.y && point.y < objPoint.rb.y;
+		return (bound.left < e.x && e.x < (bound.left + bound.width) &&
+		bound.top < e.y && e.y < (bound.top + bound.height));
 	};
 
 	fabric.util.object.extend(fabric.Group.prototype, {
@@ -70,7 +92,7 @@
 			};
 			var target;
 			this.getObjects().some(function(obj) {
-				if (obj.type === 'connector' && obj.visible && __containtsPoint(obj, point)) {
+				if (obj.type === 'connector' && obj.visible && __containtsPoint(obj, point, e)) {
 					target = obj;
 					return true;
 				}
@@ -112,7 +134,7 @@
 			if (this.fireToObjects) {
 				this._objects.forEach(function(obj) {
 					if (obj.type === 'connector' && obj.visible) {
-						if (__containtsPoint(obj, point)) {
+						if (__containtsPoint(obj, point, event.e)) {
 							if(!obj.hovered) {
 								obj.trigger('mousein', event);
 							}
