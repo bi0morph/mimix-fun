@@ -11,7 +11,8 @@
 
 	mimic.init();
 	rightPanel.init(function() {
-		mimic.canvas.on('object:selected', function(event){
+
+		mimic.canvas.on('mouse:dblclick', function(event){
 			if (event.target && event.target.actions) {
 				rightPanel.show();
 				rightPanel.render(event.target.actions, event.target.stateCode);
