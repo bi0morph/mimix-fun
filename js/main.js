@@ -15,7 +15,7 @@
 		mimic.canvas.on('mouse:dblclick', function(event){
 			if (event.target && event.target.actions) {
 				rightPanel.show();
-				rightPanel.render(event.target.actions, event.target.stateCode);
+				rightPanel.render(event.target.actions, event.target.stateCode, event.target.getName());
 			}
 		});
 		mimic.canvas.on('selection:cleared', function(){

@@ -16,12 +16,16 @@
 		hide: function() {
 			_rightPanel.className = 'right-panel hidden';
 		},
-		render: function(actions, stateCode) {
+		render: function(actions, stateCode, title) {
 
 			while (_rightPanel.firstChild) {
 				_rightPanel.removeChild(_rightPanel.firstChild);
 			}
-
+			if (title) {
+				var h4 = document.createElement('h4');
+				h4.innerText = title;
+				_rightPanel.appendChild(h4);
+			}
 			if (actions) {
 				actions.forEach(function(action) {
 					if ( action.values.length) {

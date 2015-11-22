@@ -19,10 +19,26 @@
 		stroke: 'black',
 		strokeWidth: 1
 	};
+	// Насос
 	mimic.LEDCircularPump = fabric.util.createClass(fabric.Group, {
 		type: 'led-circular-pump',
 		state: 3,
 		padding: 10,
+		name: 'Насос',
+		getName: function() {
+			var name = this.name;
+			if (this.text) {
+				name += ' ' + this.text;
+			}
+			return  name;
+		},
+		emergency: false, // да, нет, красный треугольник и красная рамка/ источник данных?
+		status: false, // включен, выключен, зеленый/светлозеленый/ источник данных?
+		speed: 0, // 0-100%
+		task: 0, // 0-100%
+		mode: 'Ручной', // режим работы
+		text: 'P1', // текст
+
 		stateCode: 'notDetermined',
 		_wrap: null,
 		_mainCircle: null,
@@ -119,7 +135,7 @@
 		_createActions: function() {
 			var actions = [];
 			actions.push({
-				title: 'Изменить состояние',
+				title: 'Изменить состояние насоса',
 				values: [
 					{
 						title: 'включен',
