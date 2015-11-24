@@ -83,6 +83,22 @@
 
 			return objectsTemp;
 		},
+		_setObjectNotActive: function(object) {
+			object.group = this;
+		},
+		addWithUpdate: function(object) {
+			this._restoreObjectsState();
+			if (object) {
+				this._objects.push(object);
+				object.group = this;
+				object._set('canvas', this.canvas);
+			}
+			// since _restoreObjectsState set objects inactive
+			this.forEachObject(this._setObjectNotActive, this);
+			this._calcBounds();
+			this._updateObjectsCoords();
+			return this;
+		},
 		findTarget: function(e) {
 			var point = {
 				x: e.x - this.left,

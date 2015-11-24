@@ -51,6 +51,8 @@
 							fireToObjects: false,
 							hasControls: false
 						});
+						temp.showHeader();
+
 						temp.on('mouseup', function(e) {
 							if(e.e.x < self.left + self.width) {
 								this.canvas.remove(temp);
