@@ -39,16 +39,18 @@
 					_rightPanel.appendChild(h4);
 				}
 				if (actions) {
+					var fragment = document.createDocumentFragment();
 					actions.forEach(function(action) {
-						if ( action.values.length) {
+						if ( action.values && action.values.length) {
+							var div = document.createElement('div');
 							var label = document.createElement('label');
 							label.innerHTML = action.title;
 							var select = document.createElement('select');
 							action.values.forEach(function(value, index) {
 								var option = document.createElement('option');
-								option.value = value.value;
+								option.value = value.value ? value.value : '';
 								option.innerHTML = value.title;
-								if (stateCode === value.value) {
+								if (action.isSelected(value.value)) {
 									option.selected = true;
 									select.selectedIndex = index;
 								}
@@ -57,10 +59,29 @@
 							select.onchange = function() {
 								action.run(this.options[this.selectedIndex].value);
 							};
-							_rightPanel.appendChild(label);
-							_rightPanel.appendChild(select);
+							div.appendChild(label);
+							div.appendChild(select);
+							fragment.appendChild(div);
+						} else if (action.value) {
+							var div = document.createElement('div'),
+								form = document.createElement('form'),
+								label = document.createElement('label'),
+								input = document.createElement('input');
+
+							label.innerHTML = action.title;
+							input.value = action.value;
+							form.onsubmit = function(e) {
+								action.run(input.value);
+								e.preventDefault();
+							};
+
+							div.appendChild(form);
+							form.appendChild(label);
+							form.appendChild(input);
+							fragment.appendChild(div);
 						}
 					});
+					_rightPanel.appendChild(fragment);
 				}
 				this.show();
 			}

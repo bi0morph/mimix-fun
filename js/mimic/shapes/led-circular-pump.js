@@ -33,6 +33,7 @@
 			}
 			return  name;
 		},
+		source: null,
 		emergency: {
 			//  источник данных источником аварии для элемента мнемосхемы «Насос»
 			// может быть отдельный канал или тот же канал, который отвечает за текущее состояние
@@ -49,6 +50,29 @@
 		text: 'P1', // текст
 		remoteСontrol: true, // удаленное управление
 		stateCode: 'notDetermined',
+
+		_setEmergency: function(state, source) {
+			this.emergency.state = !!state;
+			this.emergency.source = source;
+			this.fire('changed:emergency', this.emergency);
+		},
+		_setStatus: function(state, source) {
+			this.status.state = !!state;
+			this.status.source = source;
+			this.fire('changed:status', this.status);
+		},
+		_setTask: function(task) {
+			this.task = task;
+			this.fire('changed:task', task);
+		},
+		_setMode: function(mode) {
+			this.mode = mode;
+			this.fire('changed:mode', mode);
+		},
+		_setSpeed: function(speed) {
+			this.speed = speed;
+			this.fire('changed:speed', speed);
+		},
 
 		_wrap: null,
 		_mainCircle: null,
@@ -157,23 +181,55 @@
 		_createActions: function() {
 			var actions = [];
 			actions.push({
-				title: 'Изменить состояние насоса',
+				title: 'Статус',
+				isSelected: function(value) {
+					return value === this.status.state;
+				}.bind(this),
 				values: [
 					{
-						title: 'включен',
-						value: 'working'
-					},
-					{
-						title: 'Авария',
-						value: 'faulty'
+						title: 'Включен',
+						value: true
 					},
 					{
 						title: 'Выключен',
-						value: 'notDetermined'
+						value: false
 					}
 				],
 				run: function(value) {
-					this.setState(value)
+					this._setStatus(value, this.source);
+				}.bind(this)
+			});
+			actions.push({
+				title: 'Авария',
+				isSelected: function(value) {
+					return value === this.emergency.state;
+				}.bind(this),
+				values: [
+					{
+						title: 'Есть авария',
+						value: true
+					},
+					{
+						title: 'Нет аварии',
+						value: false
+					}
+				],
+				run: function(value) {
+					this._setEmergency(value, this.source);
+				}.bind(this)
+			});
+			actions.push({
+				title: 'Скорость',
+				value: this.speed,
+				run: function(value) {
+					this._setSpeed(value);
+				}.bind(this)
+			});
+			actions.push({
+				title: 'Режим',
+				value: this.mode,
+				run: function(value) {
+					this._setMode(value);
 				}.bind(this)
 			});
 			return actions;
@@ -199,14 +255,13 @@
 			this._textSpeed.visible = true;
 			this._text.visible = true;
 			this._textMode.visible = true;
-
 		},
 		checkState: function() {
 			var state = 'off';
 			if (this.emergency.state) {
 				state = 'faulty';
 			} else if(this.status.state) {
-				if (this.status.source) {
+				if (this.source) {
 					state = 'working';
 				} else {
 					state = 'on';
@@ -214,6 +269,7 @@
 			} else {
 				state = 'off';
 			}
+
 			this.setState(state);
 		},
 		setState: function(key) {
@@ -276,8 +332,6 @@
 					this.state = _states.notDetermined;
 					this._wrap.visible = false;
 			}
-			this._calcBounds();
-			this._updateObjectsCoords();
 
 			if (this._mainCircle.canvas) {
 				this._mainCircle.canvas.renderAll();
@@ -299,17 +353,33 @@
 		_initEvents: function() {
 			this.callSuper('_initEvents');
 
-			console.log('event:moving');
+			this.on('changed:status', function() {
+				console.log('changed:status');
+				this.checkState();
+			});
+			this.on('changed:emergency', function() {
+				console.log('changed:emergency');
+				this.checkState();
+			});
+			this.on('changed:mode', function(mode) {
+				console.log('changed:mode');
+				this._textMode.changeText(mode);
+				this._changeTextPosition();
+				this.canvas.renderAll();
+			}.bind(this));
+			this.on('changed:speed', function(speed) {
+				console.log('changed:speed');
+				this._textSpeed.changeText(speed +'%');
+				this._changeTextPosition();
+				this.canvas.renderAll();
+			}.bind(this));
 			this.on('moving', function() {
-				console.log('moving');
 				this._changeTextPosition();
 			});
 			this.on('scaling', function() {
-				console.log('scaling');
 				this._changeTextPosition();
 			});
 			this.on('removed', function() {
-				console.log('removed');
 				this.canvas.remove(this._text);
 				this.canvas.remove(this._textSpeed);
 				this.canvas.remove(this._textMode);

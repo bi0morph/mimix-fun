@@ -11,6 +11,12 @@
 		degreesToRadians = fabric.util.degreesToRadians;
 
 	mimic.TextBox = fabric.util.createClass(fabric.Group, {
+		changeText: function(text) {
+			this._text.set({
+				text: text
+			});
+			this._textModified();
+		},
 		_createObjects: function(text, options) {
 
 			this._text = new fabric.Text( text, {
@@ -37,6 +43,7 @@
 				width: this._text.width + 6,
 				height: this._text.height
 			});
+			this.width = this._text.width + 6;
 		},
 		_bindMethods: function() {
 			this._textModified.bind(this);
