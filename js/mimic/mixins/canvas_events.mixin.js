@@ -113,7 +113,7 @@
 		_handleCursorAndEvent: function(e, target) {
 			this._setCursorFromEvent(e, target);
 
-			// TODO: why are we doing this?
+
 			var _this = this;
 			setTimeout(function () {
 				_this._setCursorFromEvent(e, target);
