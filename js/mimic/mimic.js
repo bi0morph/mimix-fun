@@ -71,8 +71,6 @@
 		//canvas.add(controlValve);
 		canvas.renderAll();
 
-		// TODO: fix center of connection
-
 		// TODO: remove connection from group. make them separate
 
 		// TODO: fix connection lines start position

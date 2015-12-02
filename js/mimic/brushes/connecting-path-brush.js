@@ -13,7 +13,7 @@
 				first: first,
 				second: null
 			};
-			this._start = first.getCenter();
+			this._start = mimic.util.getCenterFromGroup(first);
 			this._end = null;
 		},
 
@@ -51,7 +51,7 @@
 				!target.connectedTo
 			) {
 				this._connectors.second = target;
-				this._end = target.getCenter();
+				this._end = mimic.util.getCenterFromGroup(target);
 				this._finalizeAndAddPath();
 			} else {
 				this._reset();

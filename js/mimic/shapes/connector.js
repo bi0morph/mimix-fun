@@ -42,7 +42,7 @@
 
 			this.on('group:move', function() {
 				if(this.connectedTo) {
-					var newPoint = this.getCenter(),
+					var newPoint =  mimic.util.getCenterFromGroup(this),
 						options = {},
 						number = this.connectedTo['position'];
 					options['x' + number] = newPoint.x;
@@ -52,7 +52,7 @@
 			});
 			this.on('group:scaling', function() {
 				if(this.connectedTo) {
-					var newPoint = this.getCenter(),
+					var newPoint = mimic.util.getCenterFromGroup(this),
 						options = {},
 						number = this.connectedTo['position'];
 					options['x' + number] = newPoint.x;
@@ -60,12 +60,6 @@
 					this.connectedTo['line'].set(options);
 				}
 			});
-		},
-		getCenter: function() {
-			return {
-				y: this.group.top + (this.originalTop + this.radius) * this.group.scaleY,
-				x: this.group.left + (this.originalLeft + this.radius) * this.group.scaleX
-			};
 		},
 		initialize: function (options) {
 			options = options || {};
