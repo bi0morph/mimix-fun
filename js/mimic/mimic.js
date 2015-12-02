@@ -10,8 +10,7 @@
 				resizeCanvas: _resizeCanvas,
 				startEdit: _startEdit,
 				stopEdit: _stopEdit
-			}),
-		fabric  = global.fabric;
+			});
 
 	function _startEdit() {
 		this.canvas.getObjects().forEach(function(obj) {
@@ -71,6 +70,18 @@
 		//
 		//canvas.add(controlValve);
 		canvas.renderAll();
+
+		// TODO: fix center of connection
+
+		// TODO: remove connection from group. make them separate
+
+		// TODO: fix connection lines start position
+
+		// TODO: fix connection lines end position
+
+		// TODO: create types of connection lines
+
+		// TODO: add build process (concotanate, minimaze, source map, eslint)
 	}
 
 
