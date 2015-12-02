@@ -7,7 +7,6 @@
 (function(global) {
 
 	var fabric = global.fabric,
-		clone = fabric.util.object.clone,
 		mimic = global.mimic;
 
 	var _default = {
@@ -26,38 +25,9 @@
 			selectable: false
 		})
 	};
-	var _getBoundingBoxFromGroup = function(obj) {
-		var objTmp = clone( obj),
-			groupTmp = obj.group,
-			bound;
-
-		groupTmp._setObjectPosition(objTmp);
-		objTmp.setCoords();
-		objTmp.hasControls = objTmp.__origHasControls;
-		delete objTmp.__origHasControls;
-		objTmp.set('active', false);
-		objTmp.setCoords();
-		delete objTmp.group;
-
-		bound = objTmp.getBoundingRect();
-
-		return bound;
-	};
 
 	var __containtsPoint = function(obj, point, e) {
-		var bound = _getBoundingBoxFromGroup(obj),
-			objPoint = {
-			tp: {
-				x: obj.originalLeft * point.scaleX,
-				y: obj.originalTop * point.scaleY
-			},
-			rb: {
-				x: (obj.originalLeft + obj.width) * point.scaleX,
-				y: (obj.originalTop + obj.height) * point.scaleY
-			}
-		};
-		//return objPoint.tp.x < point.x && point.x < objPoint.rb.x &&
-		//			objPoint.tp.y < point.y && point.y < objPoint.rb.y;
+		var bound = mimic.util.getBoundingBoxFromGroup(obj);
 		return (bound.left < e.x && e.x < (bound.left + bound.width) &&
 		bound.top < e.y && e.y < (bound.top + bound.height));
 	};
@@ -146,7 +116,6 @@
 				scaleX: this.scaleX,
 				scaleY: this.scaleY
 			};
-			var self = this;
 			if (this.fireToObjects) {
 				this._objects.forEach(function(obj) {
 					if (obj.type === 'connector' && obj.visible) {
