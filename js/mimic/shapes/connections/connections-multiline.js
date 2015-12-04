@@ -11,10 +11,22 @@
 	mimic.ConnectionMultiLine = fabric.util.createClass(fabric.Line, {
 		type: 'connection-multi-line',
 		connectors: [],
+		_removeLine: function() {
+			this.connectors[0].connectedTo = null;
+			this.connectors[1].connectedTo = null;
+			this.remove();
+		},
+		_initDpendencies: function() {
+			var removeLine = this._removeLine.bind(this);
+			this.connectors.forEach(function(connector) {
+				connector.group.on('removed', removeLine);
+			});
+		},
 		initialize: function (connectors, points, options) {
 			options = options || {};
 			this.connectors = connectors || [];
 			this.callSuper('initialize', points, options);
+			this._initDpendencies();
 		},
 		_render: function(ctx, noTransform) {
 			ctx.beginPath();
