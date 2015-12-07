@@ -19,7 +19,8 @@
 		_initDpendencies: function() {
 			var removeLine = this._removeLine.bind(this);
 			this.connectors.forEach(function(connector) {
-				connector.group.on('removed', removeLine);
+				var group = connector.group || connector._group;
+				group.on('removed', removeLine);
 			});
 		},
 		initialize: function (connectors, points, options) {

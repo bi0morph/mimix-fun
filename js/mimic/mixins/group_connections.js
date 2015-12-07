@@ -7,10 +7,14 @@
 (function(global) {
 
 	var fabric = global.fabric,
-		mimic = global.mimic;
+		mimic = global.mimic,
+		clone = fabric.util.object.clone;
 
 	var _default = {
-		circle: new mimic.Connector(),
+		circle: new mimic.Connector({
+			originX: 'center',
+			originY: 'center'
+		}),
 		line: new fabric.Line(
 			[0, 0, 15, 0], {
 				stroke: 'black',
@@ -86,23 +90,28 @@
 			return target;
 		},
 		_connections: [],
+		_connectionsOutSide: [],
 		_createConnection: function() {
 			return _default.circle.clone();
 		},
 		_createConnections: function(params) {
-			var top = params.height/4 - _default.circle.radius,
+			var top = params.height/4 + _default.circle.radius,
 				circleLeft = _default.circle.clone().set({
 					top: top,
-					left: 0,
+					left: _default.circle.radius,
 					selectable: false,
-					visible: false
+					visible: false,
+					originX: 'center',
+					originY: 'center'
 				}),
 				circleRight = _default.circle.clone().set({
 					top: top,
-					left: params.width + this._padding - _default.circle.radius,
+					left: params.width + this._padding + _default.circle.radius,
 					selectable: false,
 					position: 'right',
-					visible: false
+					visible: false,
+					originX: 'center',
+					originY: 'center'
 				});
 			this._connections = [ circleLeft, circleRight ];
 			return this._connections;
@@ -134,23 +143,22 @@
 		_onMoving: function(e) {
 			if (this.fireToObjects) {
 				this._objects.forEach(function(obj) {
-					if (obj.type === 'connector' && obj.visible) {
+					if (obj.type === 'connector') {
 						obj.trigger('group:move', e, obj);
 					}
 				});
 			}
 		},
 		hideConnections: function() {
-			this._objects.forEach(function(obj) {
-				if (obj.type === 'connector') {
-					obj.visible = false;
-				}
+			this._connectionsOutSide.forEach(function(obj) {
+				obj.visible = false;
 			});
 		},
 		showConnections: function() {
-			this._objects.forEach(function(obj) {
-				if (obj.type === 'connector') {
-					obj.visible = true;
+			this._connections.forEach(function(con) {
+				if (con.outSide) {
+					con.outSide.visible = true;
+					con._positionOutSide();
 				}
 			});
 		},
@@ -172,7 +180,40 @@
 				});
 			}
 		},
+		_onAdded: function() {
+			console.log('add to canvas');
+			var self = this,
+				temp, box;
+			this._connections.forEach(function(connection) {
+				temp = clone(connection);
+				box = mimic.util.getBoundingBoxFromGroup(connection);
+				temp.set({
+					top: box.top,
+					left: box.left
+				});
+				connection.outSide = temp;
+
+				temp.stroke = 'red';
+				temp._group = temp.group;
+				temp.group = null;
+
+				self._connectionsOutSide.push(temp);
+				connection._positionOutSide();
+				self.canvas.add(temp);
+			});
+			self.canvas.renderAll();
+		},
+		_onRemoved: function() {
+			console.log('removed');
+			var self = this;
+			console.log(this._connectionsOutSide);
+			this._connections.forEach(function(connection) {
+				self.canvas.remove(connection.outSide);
+			});
+		},
 		_initEvents: function() {
+			this.on('added', this._onAdded);
+			this.on('removed', this._onRemoved);
 			this.on('mousedown', this._checkEventInObjects);
 			this.on('mouseup', this._checkEventInObjects);
 			this.on('mousemove', this._checkEventInObjects);

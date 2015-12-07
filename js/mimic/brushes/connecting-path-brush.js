@@ -110,17 +110,18 @@
 		_render: function() {
 			var ctx  = this.canvas.contextTop,
 				v = this.canvas.viewportTransform,
+				firstGroup = this._connectors.first.group || this._connectors.first._group,
 				p1 = this._start,
 				p2 = this._end,
 				pNear1 = {
 					x: p1.x,
-					y: p1.y,
+					y: p1.y
 				},
 				firstGroupBox = {
-					width: this._connectors.first.group.width,
-					height: this._connectors.first.group.height,
-					top: this._connectors.first.group.top,
-					left: this._connectors.first.group.left
+					width: firstGroup.width,
+					height: firstGroup.height,
+					top: firstGroup.top,
+					left: firstGroup.left
 				};
 
 			pNear1.x = pNear1.x + (this._connectors.first.position === 'left' ? -2 : 2) * this._connectors.first.radius;
@@ -140,10 +141,10 @@
 
 			var additionalPoints = [],
 				firstBox = {
-					top: this._connectors.first.group.top - this._connectors.first.radius,
-					left: this._connectors.first.group.left - this._connectors.first.radius,
-					bottom: this._connectors.first.group.top + this._connectors.first.group.height + this._connectors.first.radius,
-					right: this._connectors.first.group.top + this._connectors.first.group.width + this._connectors.first.radius
+					top: firstGroup.top - this._connectors.first.radius,
+					left: firstGroup.left - this._connectors.first.radius,
+					bottom: firstGroup.top + firstGroup.height + this._connectors.first.radius,
+					right: firstGroup.top + firstGroup.width + this._connectors.first.radius
 				},
 				middleX, tmpPoint;
 			ctx.moveTo(p1.x, p1.y);

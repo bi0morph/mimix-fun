@@ -113,16 +113,16 @@
 		},
 		_connections: [],
 		_createConnections: function(params) {
-			var top = params.height/4 - _default.circle.radius,
+			var top = params.height/4,
 				circleLeft = _default.circle.clone().set({
 					top: top,
-					left: 0,
+					left: _default.circle.radius,
 					selectable: false,
 					visible: false
 				}),
 				circleRight = _default.circle.clone().set({
 					top: top,
-					left: params.width + this.padding - _default.circle.radius,
+					left: params.width + this.padding,
 					selectable: false,
 					visible: false
 				});

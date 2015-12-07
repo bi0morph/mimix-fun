@@ -7,7 +7,8 @@
 
 	var mimic = global.mimic || (global.mimic = { }),
 		fabric = global.fabric,
-		extend = fabric.util.object.extend;
+		extend = fabric.util.object.extend,
+		clone = fabric.util.object.clone;
 
 	if (mimic.LeftPanel) {
 		fabric.warn('mimic.LeftPanel is already defined');
@@ -51,19 +52,36 @@
 							fireToObjects: false,
 							hasControls: false
 						});
-						temp.showHeader();
+						temp.showHeader && temp.showHeader();
 
-						temp.on('mouseup', function(e) {
-							if(e.e.x < self.left + self.width) {
-								this.canvas.remove(temp);
-							}
-							temp.hasControls = true;
-							temp.showConnections && temp.showConnections();
-							this.canvas.renderAll();
-							if (!this.fireToObjects) {
-								this.fireToObjects = true;
-							}
-						});
+						var checkPanel = function(e) {
+								if(e.e.x < self.left + self.width) {
+									if (temp.canvas) {
+										temp.canvas.remove(temp);
+									}
+									return true;
+								}
+							},
+							oneMouseUpHandler = function oneMouseUpHandler(e) {
+								if( checkPanel(e) ) {
+									return;
+								}
+								temp.hasControls = true;
+								temp.showConnections && temp.showConnections();
+
+								if (!this.fireToObjects) {
+									this.fireToObjects = true;
+								}
+								temp.off('mouseup', oneMouseUpHandler);
+								temp.on('mouseup', everyMouseUpHandler);
+								this.canvas.renderAll();
+							},
+							everyMouseUpHandler = function everyMouseUpHandler(e) {
+								checkPanel(e)
+								this.canvas.renderAll();
+						};
+						temp.on('mouseup', oneMouseUpHandler);
+
 						this.canvas.add(temp);
 						this.canvas.__onMouseDown(event.e);
 					}

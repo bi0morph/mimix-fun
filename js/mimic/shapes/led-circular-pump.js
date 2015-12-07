@@ -151,14 +151,14 @@
 				circleLeft = this._createConnection(),
 				circleRight = this._createConnection();
 			circleLeft.set({
-				top: top,
-				left: 0,
+				top: top + circleLeft.radius,
+				left: circleLeft.radius,
 				selectable: false,
 				visible: false
 			});
 			circleRight.set({
-				top: top,
-				left: params.width,
+				top: top + circleLeft.radius,
+				left: params.width + circleLeft.radius,
 				selectable: false,
 				position: 'right',
 				visible: false
@@ -385,7 +385,6 @@
 				this.canvas.remove(this._textMode);
 			});
 			this.on('added', function() {
-				console.log('added', this.canvas);
 				this.canvas.add(this._text);
 				this.canvas.add(this._textSpeed);
 				this.canvas.add(this._textMode);

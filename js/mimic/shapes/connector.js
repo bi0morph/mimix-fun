@@ -24,42 +24,63 @@
 		connectedTo: null,
 		_initEvents: function() {
 			this.on('mousedown', function(event) {
+				console.log('mousedown');
 				if (!this.connectedTo) {
 					var connectionBrush = new mimic.ConnectingPathBrush(this.canvas, this); // ConnectingLineBrush
 					this.canvas.setDrawingMode(connectionBrush, event.e);
 				}
 			});
 			this.on('mouseout', function(event) {
+				console.log('mouseout');
 				this.hovered = false;
 				this.setFill('white');
 				this.canvas.renderAll();
 			});
 			this.on('mousein', function(event) {
+				console.log('mousein');
 				this.hovered = true;
 				this.setFill('gray');
 				this.canvas.renderAll();
 			});
 
 			this.on('group:move', function() {
-				if(this.connectedTo) {
-					var newPoint =  mimic.util.getCenterFromGroup(this),
-						options = {},
-						number = this.connectedTo['position'];
-					options['x' + number] = newPoint.x;
-					options['y' + number] = newPoint.y;
-					this.connectedTo['line'].set(options);
+				if (this.outSide) {
+					this._positionOutSide();
+
+					if(this.outSide.connectedTo) {
+						var newPoint =  mimic.util.getCenterFromGroup(this),
+							options = {},
+							number = this.outSide.connectedTo['position'];
+						options['x' + number] = newPoint.x;
+						options['y' + number] = newPoint.y;
+						this.outSide.connectedTo['line'].set(options);
+					}
 				}
 			});
 			this.on('group:scaling', function() {
-				if(this.connectedTo) {
-					var newPoint = mimic.util.getCenterFromGroup(this),
-						options = {},
-						number = this.connectedTo['position'];
-					options['x' + number] = newPoint.x;
-					options['y' + number] = newPoint.y;
-					this.connectedTo['line'].set(options);
+				if (this.outSide) {
+					this._positionOutSide();
+
+					if(this.outSide.connectedTo) {
+						var newPoint =  mimic.util.getCenterFromGroup(this),
+							options = {},
+							number = this.outSide.connectedTo['position'];
+						options['x' + number] = newPoint.x;
+						options['y' + number] = newPoint.y;
+						this.outSide.connectedTo['line'].set(options);
+					}
 				}
 			});
+		},
+		_positionOutSide: function() {
+			if (this.outSide) {
+				var box = mimic.util.getBoundingBoxFromGroup(this);
+				this.outSide.set({
+					top: box.top + box.height/2,
+					left: box.left + box.width/2
+				});
+				this.outSide.setCoords();
+			}
 		},
 		initialize: function (options) {
 			options = options || {};
