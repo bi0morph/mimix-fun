@@ -40,7 +40,6 @@
 			return this.remoteControl ? this._actions : false;
 		},
 		_changeType: function(type) {
-			console.log('_changeType', type, this);
 			switch (type) {
 				case 'hot-pipe':
 					this.set({strokeWidth: 6, stroke: 'red'});
@@ -51,12 +50,10 @@
 				default:
 					this.set({strokeWidth: 4, stroke: 'black'});
 			}
-			console.log(this);
 		},
 		setLineType: function(type) {
 			this._lineType = type;
 			this._changeType(type);
-			console.log('setLineType', type);
 			if (this.canvas) {
 				this.canvas.renderAll();
 			}
