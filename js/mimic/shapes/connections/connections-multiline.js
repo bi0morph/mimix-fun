@@ -26,6 +26,7 @@
 		initialize: function (connectors, points, options) {
 			options = options || {};
 			this.connectors = connectors || [];
+			this._points = [];
 			this.callSuper('initialize', points, options);
 			this._initDpendencies();
 		},
@@ -53,19 +54,76 @@
 						x2: p.x2,
 						y2: p.y2
 					},
-					middleX;
-				ctx.moveTo(p.x1, p.y1);
-				pNear.x1 = pNear.x1 + (this.connectors[0].position === 'left' ? -2 : 2) * this.connectors[0].radius;
-				pNear.x2 = pNear.x2 + (this.connectors[1].position === 'left' ? -2 : 2) * this.connectors[1].radius;
+					first = this.connectors[0],
+					second = this.connectors[1],
+					firstGroupBox = first._group.getBoundingRect(),
+					secondGroupBox = second._group.getBoundingRect(),
+					currentPoint, nextPoint, middleX, middleY;
 
-				ctx.lineTo(pNear.x1, pNear.y1);
-				if (pNear.x1 !== pNear.x2) {
-					middleX = pNear.x1 + (pNear.x2 - pNear.x1)/2;
-					ctx.lineTo(middleX, pNear.y1);
-					ctx.lineTo(middleX, pNear.y2);
+				this._points = [];
+				// start point in connector
+				currentPoint = new fabric.Point(p.x1, p.y1);
+
+				this._points.push(currentPoint);
+
+				// point out of bounding box
+				pNear.x1 = pNear.x1 + (first.position === 'left' ? -2 : 2) * first.radius;
+				pNear.x2 = pNear.x2 + (second.position === 'left' ? -2 : 2) * second.radius;
+				currentPoint = new fabric.Point(pNear.x1, pNear.y1);
+				nextPoint = new fabric.Point(pNear.x2, pNear.y2);
+
+				this._points.push(currentPoint);
+
+				if (first.position === 'left' && second.position === 'right' &&
+					currentPoint.x < nextPoint.x) {
+					// middle by y
+					middleY = currentPoint.y + (nextPoint.y - currentPoint.y)/2;
+
+					currentPoint = new fabric.Point(currentPoint.x, middleY);
+					this._points.push(currentPoint);
+
+					currentPoint = new fabric.Point(nextPoint.x, middleY);
+					this._points.push(currentPoint);
+
+				} else if (first.position === 'right' && second.position === 'left' &&
+					currentPoint.x > nextPoint.x){
+					// middle by y
+
+					middleY = currentPoint.y + (nextPoint.y - currentPoint.y)/2;
+
+					currentPoint = new fabric.Point(currentPoint.x, middleY);
+					this._points.push(currentPoint);
+
+					currentPoint = new fabric.Point(nextPoint.x, middleY);
+					this._points.push(currentPoint);
+
+				} else {
+					if (pNear.x1 !== pNear.x2) {
+						middleX = pNear.x1 + (pNear.x2 - pNear.x1)/2;
+
+						currentPoint = new fabric.Point(middleX, currentPoint.y);
+						this._points.push(currentPoint);
+
+						currentPoint = new fabric.Point(middleX, nextPoint.y);
+						this._points.push(currentPoint);
+					}
 				}
-				ctx.lineTo(pNear.x2, pNear.y2);
-				ctx.lineTo(p.x2, p.y2);
+
+				currentPoint = nextPoint;
+				this._points.push(currentPoint);
+
+				currentPoint = new fabric.Point(p.x2, p.y2);
+				this._points.push(currentPoint);
+
+				this._points.forEach(function(point, index) {
+					switch (index) {
+						case 0:
+							ctx.moveTo(point.x, point.y);
+							break;
+						default:
+							ctx.lineTo(point.x, point.y);
+					}
+				});
 			}
 
 			ctx.lineWidth = this.strokeWidth;
@@ -74,6 +132,6 @@
 			ctx.strokeStyle = this.stroke || ctx.fillStyle;
 			this.stroke && this._renderStroke(ctx);
 			ctx.strokeStyle = origStrokeStyle;
-		},
+		}
 	});
 })(typeof exports !== 'undefined' ? exports : this);

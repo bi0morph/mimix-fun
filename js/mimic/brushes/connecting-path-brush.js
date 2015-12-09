@@ -48,6 +48,7 @@
 		onMouseUp: function(target) {
 			if (target && target.type === 'connector' &&
 				this._connectors.first !== target &&
+				this._connectors.first._group !== target._group &&
 				!target.connectedTo
 			) {
 				this._connectors.second = target;
