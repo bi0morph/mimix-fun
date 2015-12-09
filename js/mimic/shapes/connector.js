@@ -24,20 +24,18 @@
 		connectedTo: null,
 		_initEvents: function() {
 			this.on('mousedown', function(event) {
-				console.log('mousedown');
+				// TODO: create hover state for connector
 				if (!this.connectedTo) {
 					var connectionBrush = new mimic.ConnectingPathBrush(this.canvas, this); // ConnectingLineBrush
 					this.canvas.setDrawingMode(connectionBrush, event.e);
 				}
 			});
 			this.on('mouseout', function(event) {
-				console.log('mouseout');
 				this.hovered = false;
 				this.setFill('white');
 				this.canvas.renderAll();
 			});
 			this.on('mousein', function(event) {
-				console.log('mousein');
 				this.hovered = true;
 				this.setFill('gray');
 				this.canvas.renderAll();

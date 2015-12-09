@@ -181,7 +181,6 @@
 			}
 		},
 		_onAdded: function() {
-			console.log('add to canvas');
 			var self = this,
 				temp, box;
 			this._connections.forEach(function(connection) {
@@ -204,9 +203,7 @@
 			self.canvas.renderAll();
 		},
 		_onRemoved: function() {
-			console.log('removed');
 			var self = this;
-			console.log(this._connectionsOutSide);
 			this._connections.forEach(function(connection) {
 				self.canvas.remove(connection.outSide);
 			});

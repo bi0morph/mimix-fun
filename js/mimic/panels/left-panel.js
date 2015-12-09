@@ -81,7 +81,6 @@
 								this.canvas.renderAll();
 						};
 						temp.on('mouseup', oneMouseUpHandler);
-
 						this.canvas.add(temp);
 						this.canvas.__onMouseDown(event.e);
 					}

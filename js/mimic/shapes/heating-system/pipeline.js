@@ -111,7 +111,6 @@
 			});
 			return target;
 		},
-		_connections: [],
 		_createConnections: function(params) {
 			var top = params.height/4,
 				circleLeft = _default.circle.clone().set({
@@ -124,6 +123,7 @@
 					top: top,
 					left: params.width + this.padding,
 					selectable: false,
+					position: 'right',
 					visible: false
 				});
 			this._connections = [ circleLeft, circleRight ];
@@ -150,31 +150,6 @@
 					}
 				});
 			}
-		},
-		_onMoving: function(e) {
-			if (this.fireToObjects) {
-				this._objects.forEach(function(obj) {
-					if (obj.type === 'connector') {
-						obj.trigger('group:move', e, obj);
-					}
-				});
-			}
-		},
-		_onMouseOut: function() {
-			if (this.fireToObjects) {
-				this._objects.forEach(function(obj) {
-					if (obj.type === 'connector') {
-						obj.trigger('mouseout', event);
-					}
-				});
-			}
-		},
-		_initEvents: function() {
-			this.on('mousedown', this._checkEventInObjects);
-			this.on('mouseup', this._checkEventInObjects);
-			this.on('mousemove', this._checkEventInObjects);
-			this.on('mouseout', this._onMouseOut);
-			this.on('moving', this._onMoving);
 		}
 	});
 })(window);
