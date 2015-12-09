@@ -10,6 +10,7 @@
 
 	mimic.ConnectionMultiLine = fabric.util.createClass(fabric.Line, {
 		type: 'connection-multi-line',
+		_lineType: 'cabel',
 		connectors: [],
 		_removeLine: function() {
 			this.connectors[0].connectedTo = null;
@@ -27,9 +28,67 @@
 			options = options || {};
 			this.connectors = connectors || [];
 			this._points = [];
+
+			this._changeType(options.type);
+
 			this.callSuper('initialize', points, options);
 			this._initDpendencies();
+			this.remoteControl = true;
+			this._actions = this._createActions();
 		},
+		getActions: function() {
+			return this.remoteControl ? this._actions : false;
+		},
+		_changeType: function(type) {
+			console.log('_changeType', type, this);
+			switch (type) {
+				case 'hot-pipe':
+					this.set({strokeWidth: 6, stroke: 'red'});
+					break;
+				case 'cold-pipe':
+					this.set({strokeWidth: 6, stroke: 'blue'});
+					break;
+				default:
+					this.set({strokeWidth: 4, stroke: 'black'});
+			}
+			console.log(this);
+		},
+		setLineType: function(type) {
+			this._lineType = type;
+			this._changeType(type);
+			console.log('setLineType', type);
+			if (this.canvas) {
+				this.canvas.renderAll();
+			}
+		},
+		_createActions: function() {
+			var actions = [];
+			actions.push({
+				title: 'Тип',
+				isSelected: function(value) {
+					return value === this._lineType;
+				}.bind(this),
+				values: [
+					{
+						title: 'Труба горячей воды',
+						value: 'hot-pipe'
+					},
+					{
+						title: 'Труба холодной воды',
+						value: 'cold-pipe'
+					},
+					{
+						title: 'Кабель',
+						value: 'cabel'
+					}
+				],
+				run: function(value) {
+					this.setLineType(value)
+				}.bind(this)
+			});
+			return actions;
+		},
+		actions: null,
 		_render: function(ctx, noTransform) {
 			ctx.beginPath();
 

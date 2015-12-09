@@ -14,6 +14,7 @@
 
 		mimic.canvas.on('mouse:dblclick', function(event){
 			if (event.target) {
+				console.log('mouse:dblclick');
 				rightPanel.render(event.target);
 			}
 		});

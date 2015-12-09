@@ -50,7 +50,8 @@
 							left: temp.originalLeft + 1,
 							top: temp.originalTop + 1,
 							fireToObjects: false,
-							hasControls: false
+							hasControls: false,
+							lockUniScaling: true
 						});
 						temp.showHeader && temp.showHeader();
 

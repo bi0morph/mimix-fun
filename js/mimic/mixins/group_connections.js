@@ -217,6 +217,9 @@
 			this.on('mouseout', this._onMouseOut);
 			this.on('moving', this._onMoving);
 			this.on('scaling', this._onScaling);
+		},
+		getActions: function() {
+			return this.remoteControl ? this._actions : false;
 		}
 	});
 })(typeof exports !== 'undefined' ? exports : this);

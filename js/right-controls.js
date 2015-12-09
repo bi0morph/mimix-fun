@@ -17,7 +17,7 @@
 			_rightPanel.className = 'right-panel hidden';
 		},
 		render: function(target) {
-			var actions, stateCode, title;
+			var actions, title;
 			if (!target) {
 				return console.error('rightPanel.render: target is undefined');
 			}
@@ -27,8 +27,7 @@
 			if (!actions) {
 				actions = target.actions;
 			}
-			stateCode = target.stateCode;
-
+			console.log(target, actions);
 			if (actions && actions.length) {
 				while (_rightPanel.firstChild) {
 					_rightPanel.removeChild(_rightPanel.firstChild);
@@ -50,7 +49,7 @@
 								var option = document.createElement('option');
 								option.value = value.value ? value.value : '';
 								option.innerHTML = value.title;
-								if (action.isSelected(value.value)) {
+								if (action.isSelected && action.isSelected(value.value)) {
 									option.selected = true;
 									select.selectedIndex = index;
 								}
