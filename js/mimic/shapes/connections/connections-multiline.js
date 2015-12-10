@@ -130,8 +130,9 @@
 
 				this._points.push(currentPoint);
 
-				if (first.position === 'left' && second.position === 'right' &&
-					currentPoint.x < nextPoint.x) {
+				if ((first.position === 'left' && second.position === 'right' &&
+					currentPoint.x < nextPoint.x) && (first.position === 'right' && second.position === 'left' &&
+				currentPoint.x > nextPoint.x)) {
 					// middle by y
 					middleY = currentPoint.y + (nextPoint.y - currentPoint.y)/2;
 
@@ -141,18 +142,22 @@
 					currentPoint = new fabric.Point(nextPoint.x, middleY);
 					this._points.push(currentPoint);
 
-				} else if (first.position === 'right' && second.position === 'left' &&
-					currentPoint.x > nextPoint.x){
-					// middle by y
-
-					middleY = currentPoint.y + (nextPoint.y - currentPoint.y)/2;
-
-					currentPoint = new fabric.Point(currentPoint.x, middleY);
+				} else if (first.position === second.position &&
+					currentPoint.x != nextPoint.x) {
+					if (first.position === 'left' ) {
+						if (nextPoint.x > currentPoint.x) {
+							currentPoint = new fabric.Point(currentPoint.x, nextPoint.y)
+						} else {
+							currentPoint = new fabric.Point(nextPoint.x, currentPoint.y)
+						}
+					} else {
+						if (nextPoint.x < currentPoint.x) {
+							currentPoint = new fabric.Point(currentPoint.x, nextPoint.y)
+						} else {
+							currentPoint = new fabric.Point(nextPoint.x, currentPoint.y)
+						}
+					}
 					this._points.push(currentPoint);
-
-					currentPoint = new fabric.Point(nextPoint.x, middleY);
-					this._points.push(currentPoint);
-
 				} else {
 					if (pNear.x1 !== pNear.x2) {
 						middleX = pNear.x1 + (pNear.x2 - pNear.x1)/2;
