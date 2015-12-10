@@ -244,7 +244,7 @@
 				lockMovementX: true,
 				lockMovementY: true,
 				lockUniScaling: true,
-				perPixelTargetFind: false
+				perPixelTargetFind: true
 			});
 
 			if (this.shadow) {
