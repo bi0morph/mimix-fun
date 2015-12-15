@@ -13,10 +13,12 @@
 		_lineType: 'cabel',
 		connectors: [],
 		getOtherConnector: function(currnetConnector) {
-			if (this.connectors[0].connectedTo === currnetConnector) {
-				return this.connectors[0];
-			} else {
+
+			console.log(this.connectors[0], this.connectors[1], currnetConnector);
+			if (this.connectors[0] === currnetConnector) {
 				return this.connectors[1];
+			} else {
+				return this.connectors[0];
 			}
 		},
 		_removeLine: function() {
