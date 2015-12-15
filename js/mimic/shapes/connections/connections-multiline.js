@@ -83,6 +83,17 @@
 					this.setLineType(value)
 				}.bind(this)
 			});
+
+			actions.push({
+				title: 'Удалить',
+				button: {
+					title: 'Удалить',
+					value: 'delete'
+				},
+				run: function() {
+					this._removeLine()
+				}.bind(this)
+			});
 			return actions;
 		},
 		actions: null,

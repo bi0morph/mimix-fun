@@ -1,5 +1,6 @@
 /**
  * Created by rus on 18.10.2015.
+ * @global document
  */
 (function(global){
 	"use strict";
@@ -39,9 +40,19 @@
 				}
 				if (actions) {
 					var fragment = document.createDocumentFragment();
-					actions.forEach(function(action) {
-						if ( action.values && action.values.length) {
-							var div = document.createElement('div');
+
+					var addActionHtml = function addActionHtml(action) {
+						var div = document.createElement('div');
+
+						if (action.button) {
+							var button = document.createElement('button');
+							button.type = 'button';
+							button.innerHTML = action.title;
+							button.addEventListener('click', function() {
+								action.run();
+							});
+							div.appendChild(button);
+						} else if ( action.values && action.values.length) {
 							var label = document.createElement('label');
 							label.innerHTML = action.title;
 							var select = document.createElement('select');
@@ -60,10 +71,8 @@
 							};
 							div.appendChild(label);
 							div.appendChild(select);
-							fragment.appendChild(div);
 						} else if (action.value) {
-							var div = document.createElement('div'),
-								form = document.createElement('form'),
+							var form = document.createElement('form'),
 								label = document.createElement('label'),
 								input = document.createElement('input');
 
@@ -77,9 +86,11 @@
 							div.appendChild(form);
 							form.appendChild(label);
 							form.appendChild(input);
-							fragment.appendChild(div);
 						}
-					});
+						fragment.appendChild(div);
+					};
+
+					actions.forEach(addActionHtml);
 					_rightPanel.appendChild(fragment);
 				}
 				this.show();
