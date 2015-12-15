@@ -25,8 +25,18 @@
 		_initEvents: function() {
 			this.on('mousedown', function(event) {
 				// TODO: create hover state for connector
+
 				if (!this.connectedTo) {
 					var connectionBrush = new mimic.ConnectingPathBrush(this.canvas, this); // ConnectingLineBrush
+					this.canvas.setDrawingMode(connectionBrush, event.e);
+				} else {
+					//var otherConnector, centerPoint;
+					//otherConnector = this.connectedTo.line.getOtherConnector(this);
+					//centerPoint = otherConnector.getCenterPoint();
+
+					this.connectedTo.line._removeLine();
+					var connectionBrush = new mimic.ConnectingPathBrush(this.canvas, this); // ConnectingLineBrush
+
 					this.canvas.setDrawingMode(connectionBrush, event.e);
 				}
 			});

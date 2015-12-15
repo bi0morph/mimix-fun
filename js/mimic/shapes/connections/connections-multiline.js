@@ -12,6 +12,13 @@
 		type: 'connection-multi-line',
 		_lineType: 'cabel',
 		connectors: [],
+		getOtherConnector: function(currnetConnector) {
+			if (this.connectors[0].connectedTo === currnetConnector) {
+				return this.connectors[0];
+			} else {
+				return this.connectors[1];
+			}
+		},
 		_removeLine: function() {
 			this.connectors[0].connectedTo = null;
 			this.connectors[1].connectedTo = null;
