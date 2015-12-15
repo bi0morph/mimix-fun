@@ -38,7 +38,7 @@
 		_createLine: function(params) {
 			var strokeWidth = 4,
 				top = params.height/4 - strokeWidth/2;
-			this._line = new fabric.Line([this.padding, top, params.width + this.padding, top], {
+			this._line = new fabric.Line([this.padding/2, top, params.width + this.padding, top], {
 				fill: params.color,
 				stroke: params.color,
 				strokeWidth: strokeWidth
