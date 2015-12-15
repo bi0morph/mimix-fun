@@ -244,7 +244,7 @@
 				lockMovementX: true,
 				lockMovementY: true,
 				lockUniScaling: true,
-				perPixelTargetFind: true
+				perPixelTargetFind: false
 			});
 
 			if (this.shadow) {
@@ -287,6 +287,8 @@
 			};
 
 			this.canvas.add(line);
+			this.canvas.bringToFront(this._connectors.first);
+			this.canvas.bringToFront(this._connectors.second);
 			line.setCoords();
 
 			this.canvas.clearContext(this.canvas.contextTop);
