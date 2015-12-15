@@ -65,6 +65,20 @@
 					}
 				}
 			});
+			this.on('group:rotating', function() {
+				if (this.outSide) {
+					this._positionOutSide();
+
+					if(this.outSide.connectedTo) {
+						var newPoint =  mimic.util.getCenterFromGroup(this),
+							options = {},
+							number = this.outSide.connectedTo['position'];
+						options['x' + number] = newPoint.x;
+						options['y' + number] = newPoint.y;
+						this.outSide.connectedTo['line'].set(options);
+					}
+				}
+			});
 			this.on('group:scaling', function() {
 				if (this.outSide) {
 					this._positionOutSide();

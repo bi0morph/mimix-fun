@@ -162,6 +162,15 @@
 				}
 			});
 		},
+		_onRotating: function(e) {
+			if (this.fireToObjects) {
+				this._objects.forEach(function(obj) {
+					if (obj.type === 'connector') {
+						obj.trigger('group:rotating', e, obj);
+					}
+				});
+			}
+		},
 		_onScaling: function(e) {
 			if (this.fireToObjects) {
 				this._objects.forEach(function(obj) {
@@ -216,6 +225,7 @@
 			this.on('mousemove', this._checkEventInObjects);
 			this.on('mouseout', this._onMouseOut);
 			this.on('moving', this._onMoving);
+			this.on('rotating', this._onRotating);
 			this.on('scaling', this._onScaling);
 		},
 		getActions: function() {
